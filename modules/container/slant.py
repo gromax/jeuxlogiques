@@ -43,13 +43,13 @@ class Data:
                 continue
             delta = index - lastIndex
             if delta > 1:
-                letter = chr(ord('a') + delta - 1)
+                letter = chr(ord('a') + delta - 2)
                 clues.append(letter)
             clues.append(str(self.__clues[row,col]))
             lastIndex = index
         delta = W*H - lastIndex
         if delta > 1:
-            letter = chr(ord('a') + delta - 1)
+            letter = chr(ord('a') + delta - 2)
             clues.append(letter)
         return f"{self.__width}x{self.__height}:{''.join(clues)}"
 
