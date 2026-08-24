@@ -34,7 +34,7 @@ class Thermometres:
         W = self.__data.width
 
         output = [
-            f"%{self.__data.game_id}",
+            f"%id={self.__data.game_id}",
             "\\begin{tikzpicture}[scale=1.2]",
             "\\draw[line width=1pt] (0,0) rectangle (" + str(W) + "," + str(H) +");",
             "\\draw[line width=0.5pt] (0,0) grid[step=1] (" + str(W) + "," + str(H) + ");",
@@ -55,14 +55,18 @@ class Thermometres:
                 H,
                 self.__sol,
                 cor = True,
-                symbol = lambda item:'b' if item else ''
+                macroname = "showColorList",
+                size = -1,
+                symbol = lambda item:'r' if item else ''
             )
 
         output += list_to_showList(
             W,
             H,
             self.__thermo_grid(),
-            macroname = "showListThermo"
+            macroname = "showListThermo",
+            size = -1,
+
         )
 
         output.append("\\end{tikzpicture}")
