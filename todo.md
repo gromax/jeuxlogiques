@@ -1,7 +1,7 @@
 Il reste quelques problèmes :
 
 - [x] dans la production de sideItems, il manque des {}
-- [ ] dans loopy, le décalage des chiffres n'est pas bon et il n'y a pas le test pour la solution
+- [x] dans loopy, le décalage des chiffres n'est pas bon et il n'y a pas le test pour la solution
 - [ ] la macro pour thermomètres n'existe pas
 - [ ] il y a une erreur dans camping
 - [ ] il faudrait nettoyer les macros.
