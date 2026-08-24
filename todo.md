@@ -11,3 +11,7 @@ Il reste quelques problèmes :
 - [x] problème du showList dans Ying yang, soluce aussi
 - [x] adjacent chiffre décalés (showList dans le scope, devrait pas)
 - [x] undead utilise un \defBordsHBGD et pas tower, pas homogène
+- [ ] ajouter palissade
+- [ ] ajouter pearl
+- [ ] ajouter range
+- [ ] ajouter loopy irréguliers
