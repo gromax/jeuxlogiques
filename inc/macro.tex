@@ -148,7 +148,30 @@
 	\end{scope}
 }
 
+% #1 = width, #2=height, #3 = list
+\newcommand{\undead}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0.5,{#2-.5})},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{L} }{
+            % miroir gauche
+    		\draw[line width=2pt] (\value{col},\value{row}) ++ (-.3,-.3) --++ (.6,.6);%
+		}{
+		\ifthenelse{ \equal{\it}{R} }{
+    		% miroir droit
+			\draw[line width=2pt] (\value{col},\value{row}) ++ (-.3,.3) --++ (.6,-.6);%
+		}
+		}
 
+		\stepcounter{col};
+	}
+	\end{scope}
+}
 
 % à vérifier
 
@@ -363,33 +386,7 @@
 	\end{scope}
 }
 
-% connexion horizontale
-\newcommand{\undead}[3]{%#size ; #2 list
-	\setcounter{col}{0}
-	\setcounter{row}{0}
-	\begin{scope}[shift={(0.5,{#1-.5})},yscale=-1]
-	\foreach \it in #2 {
-		\ifthenelse{ \value{col}= #1 }{
-			\stepcounter{row};
-			\setcounter{col}{0};
-		}{}
-		\ifthenelse{ \equal{\it}{L} }{
-            % miroir gauche
-    		\draw[line width=2pt] (\value{col},\value{row}) ++ (-.3,-.3) --++ (.6,.6);%
-		}{
-		\ifthenelse{ \equal{\it}{R} }{
-    		% miroir droit
-			\draw[line width=2pt] (\value{col},\value{row}) ++ (-.3,.3) --++ (.6,-.6);%
-		}{
-            % symbole
-            \draw (\value{col},\value{row}) node[scale=#3]{\it};%
-		}
-		}
 
-		\stepcounter{col};
-	}
-	\end{scope}
-}
 
 % connexion verticale
 \newcommand{\connectListV}[2]{%#size ; #2 list
