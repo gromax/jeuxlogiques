@@ -36,8 +36,6 @@ class Thermometres:
         output = [
             f"%id={self.__data.game_id}",
             "\\begin{tikzpicture}[scale=1.2]",
-            "\\draw[line width=1pt] (0,0) rectangle (" + str(W) + "," + str(H) +");",
-            "\\draw[line width=0.5pt] (0,0) grid[step=1] (" + str(W) + "," + str(H) + ");",
         ]
         output += sideItems(
             W,
@@ -65,6 +63,11 @@ class Thermometres:
             self.__thermo_grid(),
             macroname = "showListThermo",
         )
+
+        output += [
+            "\\draw[line width=1pt] (0,0) rectangle (" + str(W) + "," + str(H) +");",
+            "\\draw[line width=0.5pt] (0,0) grid[step=1] (" + str(W) + "," + str(H) + ");",
+        ]
 
         output.append("\\end{tikzpicture}")
         return "%\n".join(output)
