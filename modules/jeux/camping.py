@@ -38,10 +38,13 @@ class Camping:
         w = self.__data.width
         h = self.__data.height
         posTrees = {(index//w,index%w):"B" for index in self.__data.trees}
-        return list_to_showList(w, h, posTrees, {
-            "size":0.2,
-            "macroname":"showCircleList"
-        })
+        return list_to_showList(
+            w,
+            h,
+            posTrees,
+            size = 0.2,
+            macroname = "showCircleList"
+        )
     
     def __sol_tex(self) -> List[str]:
         if self.__sol is False:
@@ -50,10 +53,13 @@ class Camping:
         h = self.__data.height
         tents, ownerships = self.__sol
         output = ["\\ifthenelse{\\showCor = 1}{"]
-        output+= list_to_showList(w, h, tents, {
-            "size":1,
-            "symbol": lambda item: "T" if item else " "
-        })
+        output+= list_to_showList(
+            w,
+            h,
+            tents,
+            size = 1,
+            symbol = lambda item: "T" if item else " "
+        )
         # on va séparer les possessions horizontales des possessions verticales
         hor = []
         ver = []
