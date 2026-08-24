@@ -1,0 +1,13 @@
+Il reste quelques problèmes :
+
+- [x] dans la production de sideItems, il manque des {}
+- [ ] dans loopy, le décalage des chiffres n'est pas bon et il n'y a pas le test pour la solution
+- [ ] la macro pour thermomètres n'existe pas
+- [ ] il y a une erreur dans camping
+- [ ] il faudrait nettoyer les macros.
+- [x] Dans le nurikabe, le showList met éventuellement des 0 de trop 
+- [x] nurikabe ne met pas les "," en bout de ligne (soluce aussi)
+- [x] problème du showList dans le slant
+- [x] problème du showList dans Ying yang, soluce aussi
+- [x] adjacent chiffre décalés (showList dans le scope, devrait pas)
+- [x] undead utilise un \defBordsHBGD et pas tower, pas homogène

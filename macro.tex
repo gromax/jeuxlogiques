@@ -1,0 +1,665 @@
+\usepackage{xstring}
+
+% macro vérifiées
+
+
+% #1 = width, #2=height, #3=list de c, d
+% c pour /
+% d pour \
+\newcommand{\slant}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0,#2)},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{c} }{
+			\draw[line width=4pt] ({\value{col}},{\value{row}+1}) --++ (1,-1);
+		}{
+		  \ifthenelse{ \equal{\it}{d} }{
+			\draw[line width=4pt] ({\value{col}},{\value{row}}) --++ (1,1);
+		  }{}
+		}
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+% #1 = width, #2=height, #3=list, #4=size du texte, #4=rayon des îles
+\newcommand{\islands}[5]{
+    \setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0,#2)},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{}}{}{
+		    \draw[fill=white] ({\value{col}},{\value{row}+1}) circle(#5) node[scale=#4]{\it};
+		}
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+
+% #1 = width, #2=height, #3=list, #4=rayon
+\newcommand{\showCircleList}[4]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(.5,{#2-.5})},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{B} }{
+            % disque blanc    		
+    		\draw[fill=white] (\value{col},\value{row}) circle(#4);%
+		}{
+			\ifthenelse{ \equal{\it}{N} }{
+				% disque noir
+				\draw[fill=black] (\value{col},\value{row}) circle(#4);%
+			}{
+				% rien
+			}
+		}
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+
+
+
+
+
+% à vérifier
+
+\newcommand\sudokuGrid{
+\draw[line width=3pt] (0,0) rectangle (9,9);
+\draw[line width=2pt] (0,0) grid[step=3] (9,9);
+\draw[line width=1pt] (0,0) grid[step=1] (9,9);
+}
+
+\newcommand\sudokuGridP{
+\draw[line width=3pt] (0,0) rectangle (4,4);
+\draw[line width=2pt] (0,0) grid[step=2] (4,4);
+\draw[line width=1pt] (0,0) grid[step=1] (4,4);
+}
+
+\newcommand\plainGrid[1]{
+\draw[line width=3pt] (0,0) rectangle (#1,#1);
+\draw[line width=1pt] (0,0) grid[step=1] (#1,#1);
+}
+
+\newcommand\lightPlainGrid[1]{
+\draw[line width=2pt] (0,0) rectangle (#1,#1);
+\draw[line width=0.2pt] (0,0) grid[step=1] (#1,#1);
+}
+
+
+\newcommand\dottedGrid[1]{
+\draw[dotted] (0,0) rectangle (#1,#1);
+\draw[dotted] (0,0) grid[step=1] (#1,#1);
+}
+
+\newcommand\dottedGridRect[2]{
+\draw[dotted] (0,0) rectangle (#1,#2);
+\draw[dotted] (0,0) grid[step=1] (#1,#2);
+}
+
+
+
+\newcommand{\quadruple}[1]{
+\foreach \x/\y\lab in #1 {
+	\draw[fill=white] (\x,\y) circle (.35);
+	\draw (\x,\y) node[scale=.7]{\lab};
+}
+}
+
+
+\newcommand{\xyBlackSquares}[2]{
+\begin{scope}[shift={(0,#1)}, yscale=-1]
+\foreach \x/\y in #2 {
+	\fill[black] (\x,\y) rectangle ++ (1,1);
+}
+\end{scope}
+}
+
+\newcommand{\xyCircle}[3]{
+\foreach \x/\y\/z in #1 {
+	\draw[black] (\x,\y) cirle(#2) node[scale=#3] {\z};
+}
+}
+
+
+
+\newcommand{\bridgesCor}[2]{
+	\begin{scope}[shift={(0,#1)},yscale=-1]	
+	\foreach \lineA/\colA/\lineB/\colB/\val in #2 {
+		\ifthenelse{\val = 1}{
+			\draw[thick](\colA,\lineA) -- (\colB,\lineB);
+		}{
+			\ifthenelse{\val = 2}{
+			    \draw[thick, double, double distance=1mm](\colA,\lineA) -- (\colB,\lineB);		
+			}{}
+		}
+	}
+	\end{scope}
+}
+
+
+
+
+
+
+
+% r pour |
+% s pour -
+% t pour gauche - haut
+% u pour gauche - bas
+% v pour haut - droite
+% w pour bas - droite
+\newcommand{\showBlackList}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0,#1)},yscale=-1]
+	\foreach \it in #2 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{b} }{
+			\fill[#3] ({\value{col}},{\value{row}}) rectangle ++ (1,1);
+		}{
+		  \ifthenelse{ \equal{\it}{r} }{
+			\fill[#3] ({\value{col}+.1},{\value{row}}) rectangle ++ (.8,1);
+		  }{
+		    \ifthenelse{ \equal{\it}{s} }{
+			  \fill[#3] ({\value{col}},{\value{row}+.1}) rectangle ++ (1,.8);
+		    }{
+		    \ifthenelse{ \equal{\it}{t} }{
+			  \fill[#3] ({\value{col}+.1},{\value{row}}) -|++ (.8,.9) -|++ (-.9,-.8) -| cycle;
+		    }{
+		    \ifthenelse{ \equal{\it}{u} }{
+			  \fill[#3] ({\value{col}},{\value{row}+.1}) -|++ (.9,.9) -|++ (-.8, -.1) -| cycle;
+		    }{
+		    \ifthenelse{ \equal{\it}{v} }{
+			  \fill[#3] ({\value{col}+.1},{\value{row}}) -|++ (.8,.1) -|++ (.1,.8) -| cycle;
+		    }{
+		    \ifthenelse{ \equal{\it}{w} }{
+			  \fill[#3] ({\value{col}+.1},{\value{row}+.1}) -|++ (.9,.8) -|++ (-.1,.1) -| cycle;
+		    }{
+		    }
+		    }
+		    }
+		    }
+		    }
+		  }
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+\newcommand{\showListRaw}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(.5,.5)}]
+	\foreach \it in #2 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{b} }{
+			\fill[black!50] ({\value{col}-.5},{\value{row}-.5}) rectangle ++ (1,1);
+		}{
+			\ifthenelse{ \equal{\it}{+} }{
+				\node[anchor=center, scale=#3] at (\value{col},\value{row}) {$+$};
+			}{
+				\node[anchor=center, scale=#3] at (\value{col},\value{row}) {\it};			
+			}
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+% #1 = width, #2=height, #3 = list, #4=text size
+\newcommand{\showList}[4]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(.5,{#2-.5})},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{b} }{
+			\fill[black!50] ({\value{col}-.5},{\value{row}-.5}) rectangle ++ (1,1);
+		}{
+			\ifthenelse{ \equal{\it}{+} }{
+				\node[anchor=center, scale=#4] at (\value{col},\value{row}) {$+$};
+			}{
+				\node[anchor=center, scale=#4] at (\value{col},\value{row}) {\it};			
+			}
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+
+
+% connexion horizontale
+\newcommand{\connectListH}[2]{%#size ; #2 list
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0,{#1-.5})},yscale=-1]
+	\foreach \it in #2 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{3} }{
+            % trait complet
+    		\draw[line width=1pt] (\value{col},\value{row}) --++ (1,0);%
+		}{
+			\ifthenelse{ \equal{\it}{2} }{
+				% début seulement
+				\draw[line width=1pt] (\value{col},\value{row}) --++ (.5,0);%
+			}{
+                \ifthenelse{ \equal{\it}{1} }{
+                    % fin seulement
+                    \draw[line width=1pt] (\value{col},\value{row}) ++ (.5,0) --++(.5,0);%
+                }{				
+				    % rien
+				}
+			}
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+% connexion horizontale
+\newcommand{\undead}[3]{%#size ; #2 list
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0.5,{#1-.5})},yscale=-1]
+	\foreach \it in #2 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{L} }{
+            % miroir gauche
+    		\draw[line width=2pt] (\value{col},\value{row}) ++ (-.3,-.3) --++ (.6,.6);%
+		}{
+		\ifthenelse{ \equal{\it}{R} }{
+    		% miroir droit
+			\draw[line width=2pt] (\value{col},\value{row}) ++ (-.3,.3) --++ (.6,-.6);%
+		}{
+            % symbole
+            \draw (\value{col},\value{row}) node[scale=#3]{\it};%
+		}
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+% connexion verticale
+\newcommand{\connectListV}[2]{%#size ; #2 list
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(.5,#1)},yscale=-1]
+	\foreach \it in #2 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{3} }{
+            % trait complet
+    		\draw[line width=1pt] (\value{col},\value{row}) --++ (0,1);%
+		}{
+			\ifthenelse{ \equal{\it}{2} }{
+				% début seulement
+				\draw[line width=1pt] (\value{col},\value{row}) --++ (0,.5);%
+			}{
+                \ifthenelse{ \equal{\it}{1} }{
+                    % fin seulement
+                    \draw[line width=1pt] (\value{col},\value{row}) ++ (0,.5) --++(0,.5);%
+                }{				
+				    % rien
+				}
+			}
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+
+
+\newcommand{\sideItems}[4]{
+% Items écrit sur les bords HBGD
+\def\w{#1}
+\def\h{#2}
+\foreach \sideValues [count=\side] in #3 {
+	\ifthenelse{\side = 1}{
+		\foreach \it [count=\i] in \sideValues {
+			\draw ({\i-.5},\h) node[above, scale=#4]{\it};
+		}
+	}{}
+	\ifthenelse{\side = 2}{
+		\foreach \it [count=\i] in \sideValues {
+			\draw ({\i-.5},0) node[below, scale=#4]{\it};
+		}
+	}{}
+	\ifthenelse{\side = 3}{
+		\foreach \it [count=\i] in \sideValues {
+			\draw (0,{-\i+.5+\h}) node[left, scale=#4]{\it};
+		}
+	}{}	
+	\ifthenelse{\side = 4}{
+		\foreach \it [count=\i] in \sideValues {
+			\draw (\w, {-\i+.5+\h}) node[right, scale=#4]{\it};
+		}
+	}{}	
+
+}
+}
+
+\newcommand\tags[2]{
+\foreach \x/\y/\t in  #1 {
+	\node[anchor=north west, scale=#2, fill=white] at (\x,\y) {\t};
+}
+}
+
+\newcommand\rectanglesForKiller[1]{
+\def\m{.1}; % marge pour les zones intérieures
+\foreach \x/\y/\a/\b in  #1 {
+	\draw[line width=.5pt] ({\x+\m},{\y-\m}) rectangle ({\x+\a-\m},{\y-\b+\m} );
+}
+}
+
+\newcommand\drawZone[5]{
+	\begin{scope}[shift={(#1,#2)}, rotate=#3]
+		\draw[line width=#5 pt] plot coordinates #4 -- cycle;
+	\end{scope}
+}
+
+\newcommand\dedalopath[2]{
+	\begin{scope}[shift={(-.5,-.5)}]	
+		\draw[line width=5pt, #1,*-*] plot coordinates #2;
+	\end{scope}
+}
+
+\newcommand\thermopath[2]{
+	\StrBetween{#1}{(}{,}[\xdeb]
+	\StrBetween{#1}{,}{)}[\ydeb]
+	\begin{scope}[shift={(-.5,-.5)}]
+		\draw[line width=10pt, black!30] (\xdeb , \ydeb) -- plot coordinates #2;
+		\fill[black!30] (\xdeb , \ydeb) circle (.4);
+	\end{scope}
+}
+
+\newcommand\thermopathBlack[2]{
+	\StrBetween{#1}{(}{,}[\xdeb]
+	\StrBetween{#1}{,}{)}[\ydeb]
+	\begin{scope}[shift={(-.5,-.5)}]
+		\draw[line width=0.5cm, black] (\xdeb , \ydeb) -- plot coordinates #2;
+		\fill[black] (\xdeb , \ydeb) circle (.4);
+	\end{scope}
+}
+
+
+\newcommand\thermopathequal[2]{
+	\StrBetween{#1}{(}{,}[\xdeb]
+	\StrBetween{#1}{,}{)}[\ydeb]
+	\begin{scope}[shift={(-.5,-.5)}]
+		\draw[line width=8pt, black!30, ->, >=stealth] (\xdeb , \ydeb) -- plot coordinates #2;
+		\draw[line width=8pt, black!30, fill=white] (\xdeb , \ydeb) circle (.4);
+	\end{scope}
+}
+
+\newcommand\inequalGrid[1]{
+\foreach \x in {1,2,...,#1} {
+	\foreach \y in {1,2,...,#1}{
+		\draw ({\x-1+.2},{\y-1+.2}) rectangle ++ (.6,.6);
+	}
+}
+}
+
+\newcommand\inequalBS[1]{
+% black square
+\foreach \x/\y in #1 {
+	\fill[black] ({\x+.2},{\y+.2}) rectangle ++ (.6,.6);
+}
+}
+
+\newcommand\adjacentH[2]{
+% Placement des symboles horizontaux
+\setcounter{col}{1}
+\setcounter{row}{0}
+\begin{scope}[shift={(0,{#1-.5})}, yscale=-1]
+% 0 pour rien sinon |
+\foreach \it in #2 {
+	\ifthenelse{ \value{col}=#1 }{
+		\stepcounter{row};
+		\setcounter{col}{1};
+	}{}
+	\ifthenelse{ \it=0 }{
+	}{
+		\draw[line width=3pt] (\value{col},\value{row}+.2) --++ (0,-.4);
+	}
+	\stepcounter{col};
+}
+\end{scope}
+}
+
+\newcommand\adjacentV[2]{
+% Placement des symboles verticaux
+\setcounter{col}{0}
+\setcounter{row}{0}
+\begin{scope}[shift={(.5,{#1-1})}, yscale=-1]
+% 0 pour rien sinon |
+\foreach \it in #2 {
+	\ifthenelse{ \value{col}=#1 }{
+		\stepcounter{row};
+		\setcounter{col}{0};
+	}{}
+	\ifthenelse{ \it=0 }{
+	}{
+		\draw[line width=3pt] ({\value{col}-.2},\value{row}) --++ (.4,0);
+	}
+	\stepcounter{col};
+}
+\end{scope}
+}
+
+
+\newcommand\inequalH[2]{
+% Placement des symboles horizontaux
+\setcounter{col}{1}
+\setcounter{row}{0}
+\begin{scope}[shift={(0,{#1-.5})}, yscale=-1]
+% 1 pour >, -1 pour <, 0 pour rien
+\foreach \it in #2 {
+	\ifthenelse{ \value{col}=#1 }{
+		\stepcounter{row};
+		\setcounter{col}{1};
+	}{}
+	\ifthenelse{ \it=0 }{
+	}{
+		\draw[line width=2pt] ({\value{col}-\it*.15},\value{row}+.2) --++ ({\it*.3},-.2) --++ ({-\it*.3},-.2);
+	}
+	\stepcounter{col};
+}
+
+\end{scope}
+}
+
+\newcommand\inequalV[2]{
+% Placement des symboles verticaux
+\setcounter{col}{0}
+\setcounter{row}{0}
+\begin{scope}[shift={(.5,{#1-1})}, yscale=-1]
+% 1 pour >, -1 pour <, 0 pour rien
+\foreach \it in #2 {
+	\ifthenelse{ \value{col}=#1 }{
+		\stepcounter{row};
+		\setcounter{col}{0};
+	}{}
+	\ifthenelse{ \it=0 }{
+	}{
+		\draw[line width=2pt] ({\value{col}-.2},{\value{row}-\it*.15}) --++ (.2,{\it*.3}) --++ (.2,{-\it*.3});
+	}
+	\stepcounter{col};
+}
+
+\end{scope}
+}
+
+
+
+\newcommand\hexjunction[2]{
+	\def\c{0.8660254*#2};	
+	\IfInteger{#1}{
+		\draw ({#1*60}:\c) node[rotate={90-#1*60}]{$\blacklozenge$};	
+	}{}
+}
+
+\newcommand\hex[5]{
+
+\IfSubStr{#4}{?}{
+    \StrBefore{#4}{?}[\nodeval];
+    \StrBehind{#4}{?}[\junctions];
+}{
+	\def\nodeval{#4};
+	\def\junctions{};
+}
+
+\IfEndWith{\nodeval}{S}
+{
+    \StrBefore{\nodeval}{S}[\nodevalb];
+    \def\issol{1};
+}
+{
+	\def\nodevalb{\nodeval};
+	\def\issol{0}	;
+}
+
+
+\IfEndWith{\nodevalb}{I}
+{
+    \StrBefore{\nodevalb}{I}[\tag];
+    \def\isstart{1};
+}
+{
+	\def\tag{\nodevalb};
+	\def\isstart{0}	;
+}
+
+\begin{scope}[shift={(#1,#2)}]
+\ifthenelse{\equal{\tag}{B}}{
+    \fill[black](30:#3) -- (90:#3) -- (150:#3) -- (210:#3) -- (270:#3) -- (330:#3) -- cycle;
+}{
+    \ifthenelse{\issol = 1}{
+        \draw[fill=black!10] (30:#3) -- (90:#3) -- (150:#3) -- (210:#3) -- (270:#3) -- (330:#3) -- cycle;
+    }{
+        \draw (30:#3) -- (90:#3) -- (150:#3) -- (210:#3) -- (270:#3) -- (330:#3) -- cycle;
+    }
+    \ifthenelse{ \isstart = 1 }{
+	    \def\w{{#3*.9}}
+        \draw (30:\w) -- (90:\w) -- (150:\w) -- (210:\w) -- (270:\w) -- (330:\w) -- cycle;
+    }{}
+	\ifthenelse{#5 = 1}{% affichage cor
+	    \draw (0,0) node{\tag};
+	}{
+	    \ifthenelse{\issol = 1}{
+            \draw (0,0) node{\tag};
+	    }{}
+	}
+}
+
+\StrLen{\junctions}[\lenjunction]
+\ifthenelse{\lenjunction = 1}{
+    \hexjunction{\junctions}{#3};
+
+}{
+	\ifthenelse{\lenjunction = 2}{
+	    \StrSplit{\junctions}{1}{\first}{\second}
+	    \hexjunction{\first}{#3};
+	    \hexjunction{\second}{#3};
+	}{}
+}
+\end{scope}
+}
+
+
+\newcommand\hexGrid[3]{
+\def\c{0.8660254};
+\def\w{#1};
+\setcounter{size}{#1}
+\setcounter{col}{0}
+\setcounter{row}{0}
+\begin{scope}[yscale=-1]
+\foreach \it in #2 {
+	\ifthenelse{\value{row}<\w}{
+		\hex{ {(\value{col}*2-\value{row})*\c} }{ \value{row}*1.5 }{1}{\it}{#3}
+	}{
+		\hex{ {(\value{col}*2+ \value{row}-\w-(\w-2))*\c} }{ \value{row}*1.5 }{1}{\it}{#3}
+	}
+	\stepcounter{col};	
+	\ifthenelse{ \value{col} = \value{size} }{
+		\stepcounter{row};
+		\ifthenelse{\value{row}<\w}{
+			\stepcounter{size};
+		}{
+		    \addtocounter{size}{-1};
+		}
+		
+		\setcounter{col}{0};
+	}{}
+}
+\end{scope}
+}
+
+\newcommand{\nurikabe}[4]{
+    \plainGrid{#1}
+    \draw[line width=1pt] (0,0) rectangle (#1,#1);
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0,#1)}, yscale=-1]
+	\begin{scope}[shift={(.5,.5)}]
+	\foreach \it in #2 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{\equal{#4}{1}}{
+		    \ifthenelse{ \equal{\it}{b} }{
+		        \fill[black!80] ({\value{col}-.5},{\value{row}-.5}) rectangle ++ (1,1);
+		    }{}
+		}{}
+		\ifthenelse{ \equal{\it}{b} }{}
+		{
+		    \node[anchor=center, scale=#3] at (\value{col},\value{row}) {\it};
+		}
+		\stepcounter{col};
+	}
+	\end{scope}
+	\end{scope}
+}
