@@ -1,9 +1,10 @@
 from typing import Dict, Tuple, Union, List
-
+from modules.container.undead import Data
 from ortools.sat.python import cp_model
 
 class UndeadSolver:
-    __size:int
+    __width:int
+    __height:int
     __mirrors:Dict[Tuple[int,int],bool] # True pour left
     __ghosts:int
     __vampires:int
@@ -15,31 +16,24 @@ class UndeadSolver:
 
     def __init__(
             self,
-            size:int,
-            mirrors:Dict[Tuple[int,int], bool],
-            ghosts:int,
-            vampires:int,
-            zombies:int,
-            top:List[int],
-            right:List[int],
-            bottom:List[int],
-            left:List[int]
+            data:Data
         ):
-        self.__size = size
-        self.__ghosts = ghosts
-        self.__vampires = vampires
-        self.__zombies = zombies
-        self.__mirrors = mirrors
-        self.__top = top
-        self.__right = right
-        self.__bottom = bottom
-        self.__left = left
+        self.__width = data.width
+        self.__height = data.height
+        self.__ghosts = data.ghosts
+        self.__vampires = data.vampires
+        self.__zombies = data.zombies
+        self.__mirrors = data.mirrors
+        self.__top = data.top
+        self.__right = data.right
+        self.__bottom = data.bottom
+        self.__left = data.left
 
     def __in_box(self, i:int, j:int) -> bool:
         """
         renvoie True si (i,j) dans le cadre
         """
-        return 0 <= i < self.__size and 0 <= j < self.__size
+        return 0 <= i < self.__height and 0 <= j < self.__width
 
     def __turn(self, di:int, dj:int, sens:str) -> Tuple[int,int]:
         """
@@ -85,7 +79,7 @@ class UndeadSolver:
             assert MAX_COUNT > 0, "Trop de réptitions dans cells_path"
         return L
 
-    def solve(self) -> Union[List[List[str]], False]:
+    def solve(self) -> Union[List[str], False]:
         model = cp_model.CpModel()
 
         # -------------------------
@@ -94,8 +88,8 @@ class UndeadSolver:
         ghost = {}
         vampire = {}
         zombie = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 ghost[i,j] = model.NewBoolVar(f"g_{i}_{j}")
                 vampire[i,j] = model.NewBoolVar(f"v_{i}_{j}")
                 zombie[i,j] = model.NewBoolVar(f"z_{i}_{j}")
@@ -124,14 +118,14 @@ class UndeadSolver:
         # contraintes
         # -------------------------
         constraints = self.__top + self.__right + self.__bottom + self.__left
-        starts = [(0,j) for j in range(self.__size)] + \
-                 [(i,self.__size-1) for i in range(self.__size)] + \
-                 [(self.__size-1,j) for j in range(self.__size)] + \
-                 [(i,0) for i in range(self.__size)]
-        dirs = [(1,0)]*self.__size + \
-               [(0,-1)]*self.__size + \
-               [(-1,0)]*self.__size + \
-               [(0,1)]*self.__size
+        starts = [(0,j) for j in range(self.__width)] + \
+                 [(i,self.__width-1) for i in range(self.__height)] + \
+                 [(self.__height-1,j) for j in range(self.__width)] + \
+                 [(i,0) for i in range(self.__height)]
+        dirs = [(1,0)]*self.__width + \
+               [(0,-1)]*self.__height + \
+               [(-1,0)]*self.__width + \
+               [(0,1)]*self.__height
         for constraint, start, dir in zip(constraints, starts, dirs):
             path = self.__cells_path(start, dir)
             beforeMiror = path[0]
@@ -153,18 +147,17 @@ class UndeadSolver:
         if status == cp_model.INFEASIBLE:
             print("Insoluble !")
         if status == cp_model.FEASIBLE or status == cp_model.OPTIMAL:
-            grid = []
-            for i in range(self.__size):
-                line = []
-                for j in range(self.__size):
-                    if solver.Value(ghost[i,j]):
-                        line.append("G")
-                    elif solver.Value(vampire[i,j]):
-                        line.append("V")
-                    elif solver.Value(zombie[i,j]):
-                        line.append("Z")
-                    else:
-                        line.append(" ")
-                grid.append(line)
-            return grid
+            output = []
+            for index in range(self.__width*self.__height):
+                i = index // self.__width
+                j = index % self.__width
+                if solver.Value(ghost[i,j]):
+                    output.append("G")
+                elif solver.Value(vampire[i,j]):
+                    output.append("V")
+                elif solver.Value(zombie[i,j]):
+                    output.append("Z")
+                else:
+                    output.append(" ")
+            return output
         return False
