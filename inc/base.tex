@@ -1,0 +1,65 @@
+\documentclass[12pt]{article}
+\title{--TITLE--}
+\author{--AUTHOR--}
+
+\usepackage{etex}
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{multicol}
+\usepackage{tabularx,array}
+\usepackage{enumerate} %Possibilité de spécifier la numérotation
+\usepackage[a4paper,top=2.5cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry}
+\pagestyle{empty}
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{tcolorbox}
+\usepackage{pstricks-add} % tracé de courbes
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+\pagestyle{empty} % Supprime les numéros de pages
+\usepackage{ifthen}
+\usepackage{intcalc}
+\newcounter{row}
+\newcounter{col}
+\newcounter{size}
+\usepackage{bm} % bold math
+
+\newenvironment{changemargin}[2]{\begin{list}{}{
+\setlength{\topsep}{0pt}
+\setlength{\leftmargin}{0pt}
+\setlength{\rightmargin}{0pt}
+\setlength{\listparindent}{\parindent}
+\setlength{\itemindent}{\parindent}
+\setlength{\parsep}{0pt plus 1pt}
+\addtolength{\leftmargin}{#1}
+\addtolength{\rightmargin}{#2}
+}\item }{\end{list}}
+
+\frenchbsetup{StandardItemLabels=true, CompactItemize=false, ReduceListSpacing=true}
+
+%------entêtes------------------------
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+\chead{}
+\lhead{--LHEAD--}
+\makeatletter
+\rhead{\boxed{\text{\@title{} -- Page }\thepage /\pageref{LastPage}}}
+\makeatother
+\renewcommand{\headrulewidth}{0mm}
+\renewcommand{\footrulewidth}{0mm}
+%\cfoot{Page \thepage}
+\cfoot{--FOOT--}
+\pagestyle{fancy}
+%--------------------------------------
+
+
+\input{macro.tex}
+
+\begin{document}
+\def\showCor{0}
+
+--CONTENT--
+
+\end{document}
