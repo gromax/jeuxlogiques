@@ -36,7 +36,7 @@ class Loopy:
         output.append("\\draw[line width=0.5pt] (0,0) grid[step=1] ("+str(self.__size)+","+str(self.__size)+");")
         vals = [f"{icol}/{iline}/{value}" for (iline,icol), value in self.__constraints.items()]
         if len(vals) > 0:
-            output.append("\\begin{scope}[shift={(0,"+str(self.__size)+")}, yscale=-1]")
+            output.append("\\begin{scope}[shift={(0.5,"+str(self.__size-0.5)+")}, yscale=-1]")
             output.append("\\foreach \\x/\\y/\\c in {" + ", ".join(vals) + "} \\draw (\\x,\\y) node[scale=1.5]{\\c};")
             output.append("\\end{scope}")
         if self.__sol is not False:
@@ -45,9 +45,11 @@ class Loopy:
                 for icol in range(self.__size):
                     if self.__sol[iline][icol]:
                         cells.add_coord(iline,icol)
+            output.append("\\ifthenelse{\\showCor=1}{")
             output.append("\\begin{scope}[shift={(0,"+str(self.__size)+")}, yscale=-1]")
             output.append(cells.cadre().tex())
             output.append("\\end{scope}")
+            output.append("}{ }")
         output.append("\\end{tikzpicture}")
         return "%\n".join(output)
 
