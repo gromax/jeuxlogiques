@@ -73,7 +73,80 @@
 }
 
 
+% #1 = width, #2=height, #3=list
+\newcommand{\showListThermo}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\foreach \it/\rot in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row}
+			\setcounter{col}{0}
+		}{}
+		\pgfmathsetmacro{\x}{\value{col}+0.5}%
+        \pgfmathsetmacro{\y}{#2-0.5-\value{row}}%
+    	\begin{scope}[shift={(\x,\y)}, rotate=\rot]
+		\ifthenelse{ \equal{\it}{S} }{
+		    % bulbe
+		    % l'angle de 19.5° par rapport à 90° correspond à un delta de 0.333
+		    % soit pour 0.333*0.3 = 0.1
+		    \fill[white] (-0.1,0.5) -- (109.5:0.3) arc (110.5:430.5:0.3) -- (0.1,0.5) -- (0.5,0.5) -- (0.5,-0.5) -- (-0.5,-0.5) -- (-0.5,0.5) -- cycle;
+    		\draw[line width=1pt] (-0.1,0.5) -- (109.5:0.3) arc (110.5:430.5:0.3) -- (0.1,0.5);%
+		}{
+			\ifthenelse{ \equal{\it}{E} }{
+				% fin du thermo
+			    \fill[white] (-0.1,0.5) -- (-0.1,0) arc (-180:0:0.1) -- (0.1,0.5) -- (0.5,0.5) -- (0.5,-0.5) -- (-0.5,-0.5) -- (-0.5,0.5) -- cycle;
+    		    \draw[line width=1pt] (-0.1,0.5) -- (-0.1,0) arc (-180:0:0.1) -- (0.1,0.5);%	
+			}{
+    		    \ifthenelse{ \equal{\it}{C} }{
+    		        % coude
+     			    \fill[white] (0.5,0.5) rectangle (0.1,0.1);%
+    			    \fill[white] (-0.5,0.5) -- (-0.1,0.5) |- (0.5,-0.1) |- (-0.5,-.5) -- cycle;
+    		        \draw[line width=1pt] (0.1,0.5) |- (0.5,0.1) (-0.1,0.5) |- (0.5,-0.1);%
+    			} {
+    			    % segment droit
+    			    \fill[white] (-0.1,0.5) rectangle (-0.5,-0.5);%
+    			    \fill[white] (0.1,0.5) rectangle (0.5,-0.5);%
+    		        \draw[line width=1pt] (-0.1,0.5) --++ (0,-1) (0.1,0.5) --++ (0,-1);%
+     			}
 
+
+			}
+		}
+		\end{scope}
+
+		\stepcounter{col}
+	}
+	
+}
+
+
+% #1 = width, #2=height, #3 = list
+\newcommand{\showColorList}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(.5,{#2-.5})},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{k} }{
+			\fill[black!50] ({\value{col}-.5},{\value{row}-.5}) rectangle ++ (1,1);
+		}{}
+
+		\ifthenelse{ \equal{\it}{r} }{
+			\fill[red!50] ({\value{col}-.5},{\value{row}-.5}) rectangle ++ (1,1);
+		}{}
+
+		\ifthenelse{ \equal{\it}{b} }{
+			\fill[blue!50] ({\value{col}-.5},{\value{row}-.5}) rectangle ++ (1,1);
+		}{}
+
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
 
 
 
