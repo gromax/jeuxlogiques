@@ -99,4 +99,5 @@ elif com == "grid":
 
 else:
     print(f"Commande inconnue")
+    sys.exit(1)
 
