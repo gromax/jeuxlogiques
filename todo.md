@@ -2,7 +2,7 @@ Il reste quelques problèmes :
 
 - [x] dans la production de sideItems, il manque des {}
 - [x] dans loopy, le décalage des chiffres n'est pas bon et il n'y a pas le test pour la solution
-- [ ] la macro pour thermomètres n'existe pas
+- [x] la macro pour thermomètres n'existe pas
 - [x] il y a une erreur dans camping
 - [ ] il faudrait nettoyer les macros.
 - [x] Dans le nurikabe, le showList met éventuellement des 0 de trop 
