@@ -42,7 +42,8 @@ class Nurikabe:
                 self.__size,
                 self.__sol,
                 cor = True,
-                symbol = lambda v: 'b' if v else ' '
+                macroname = "showColorList",
+                symbol = lambda v: 'k' if v else ' '
             )
 
         # problème

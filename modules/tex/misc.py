@@ -38,7 +38,7 @@ def list_to_showList(width:int, height:int, in_L:Union[list, dict], **options) -
     height: hauteur de la grille
     in_L: liste ou dictionnaire des items à afficher
     options:
-        size: taille des items dans le tex. si -1, pas mis dans tex
+        size: taille des items dans le tex. si -1, pas mis dans tex. Par défaut -1
         symbol: fonction pour transformer un item en string
         default: valeur par défaut si item absent
         macroname: nom de la macro tex à utiliser (showList par défaut)
@@ -49,7 +49,7 @@ def list_to_showList(width:int, height:int, in_L:Union[list, dict], **options) -
     assert set(options) <= {"size", "symbol", "default", "macroname", "cor", "exclude", "addDims"}
     if len(in_L) == 0:
         return []
-    s = options.get('size',1)
+    s = options.get('size', -1)
     symbol = options.get('symbol', lambda item:str(item))
     default = options.get('default', '')
     macroname = options.get('macroname', 'showList')

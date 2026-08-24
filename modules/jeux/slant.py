@@ -38,7 +38,6 @@ class Slant:
                 self.__width,
                 self.__height,
                 self.__sol,
-                size = -1,
                 cor = True,
                 macroname = "slant",
                 symbol = lambda v: 'c' if v else 'd'
@@ -47,7 +46,6 @@ class Slant:
             self.__width+1,
             self.__height+1,
             self.__constraints,
-            size = 1,
             macroname = "islands",
             addDims = [0.3]
         )

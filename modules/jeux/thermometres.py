@@ -56,7 +56,6 @@ class Thermometres:
                 self.__sol,
                 cor = True,
                 macroname = "showColorList",
-                size = -1,
                 symbol = lambda item:'r' if item else ''
             )
 
@@ -65,8 +64,6 @@ class Thermometres:
             H,
             self.__thermo_grid(),
             macroname = "showListThermo",
-            size = -1,
-
         )
 
         output.append("\\end{tikzpicture}")
