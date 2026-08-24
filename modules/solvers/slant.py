@@ -1,5 +1,5 @@
 from typing import Dict, List, Tuple, Union
-
+from modules.container.slant import Data
 from ortools.sat.python import cp_model
 
 class SlantSolver:
@@ -7,10 +7,10 @@ class SlantSolver:
     __height:int
     __constraints:Dict[Tuple[int,int],int]
 
-    def __init__(self, width:int, height:int, constraints:Dict[Tuple[int,int], int]):
-        self.__width = width
-        self.__height = height
-        self.__constraints = constraints
+    def __init__(self, data:Data):
+        self.__width = data.width
+        self.__height = data.height
+        self.__constraints = data.clues
 
     def __neighbors_mils(self, i:int, j:int):
         """
