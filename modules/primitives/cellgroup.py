@@ -1,4 +1,4 @@
-from typing import Dict, Optional, Set, Tuple, List, Any, Union
+from typing import Dict, Optional, Tuple, List, Any, Union, Set
 
 from modules.primitives.cadre import Cadre
 from modules.primitives.cell import Cell
@@ -173,6 +173,11 @@ class CellGroup:
         renvoie la taille de la zone (nombre de cellules)
         """
         return len(self.__coords)
+
+    def add_coords(self, coords:List[Tuple[int,int]]):
+        for iline, icol in coords:
+            self.add_coord(iline, icol)
+
     
     def add_coord(self, iline:int, icol:int, cell:Optional[Cell]=None):
         """
