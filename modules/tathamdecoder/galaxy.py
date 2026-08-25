@@ -1,7 +1,7 @@
 from typing import List, Tuple
 from modules.container.galaxy import Data
 
-def decoder(self, game_id:str) -> Data:
+def decoder(game_id:str) -> Data:
     """
     game_id: chaîne selon jeu galaxy de simon tatham
     ex: 7x7:akisdznfrqtkh
