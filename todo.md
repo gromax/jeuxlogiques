@@ -11,13 +11,13 @@ Il reste quelques problèmes :
 - [x] problème du showList dans Ying yang, soluce aussi
 - [x] adjacent chiffre décalés (showList dans le scope, devrait pas)
 - [x] undead utilise un \defBordsHBGD et pas tower, pas homogène
-- [ ] ajouter palissade
+- [x] ajouter palissade
 - [ ] ajouter pearl
 - [ ] ajouter range
 - [ ] ajouter loopy irréguliers
 - [x] mettre un container pour galaxy
 - [ ] mettre un container pour kenken
-- [ ] mettre un container pour loopy
+- [x] mettre un container pour loopy
 - [ ] mettre un container pour nurikabe
 - [ ] mettre un container pour techtonic
 - [ ] mettre un container pour unequal

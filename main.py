@@ -9,6 +9,7 @@ if len(sys.argv) <= 2:
     print('adjacent "<-- code -->"')
     print('towers "<-- code -->"')
     print('loopy <-- code -->')
+    print('palisade <-- code -->')
     print('galaxy <-- code -->')
     print('yingyang "<-- url ou code -->"')
     print('nurikabe "<-- url ou code -->"')
@@ -48,6 +49,10 @@ elif com == "towers":
 elif com == "loopy":
     from modules.jeux.loopy import Loopy
     t = Loopy(tatham = sys.argv[2])
+    print(t.tex())
+elif com == "palisade":
+    from modules.jeux.palisade import Palisade
+    t = Palisade(tatham = sys.argv[2])
     print(t.tex())
 elif com == "galaxy":
     from modules.jeux.galaxy import Galaxy
