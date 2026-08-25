@@ -48,7 +48,7 @@ class Yingyang:
                 cor = False,
                 default = ' ',
                 macroname = "showCircleList",
-                symbol = lambda v: 'B' if v is True else 'N' if v is False else str(v),
+                symbol = lambda v: 'B' if v is True else 'N',
                 addDims = [0.3]
             )
             output.append("}{ }")
@@ -61,7 +61,7 @@ class Yingyang:
             cor = False,
             default = ' ',
             macroname = "showCircleList",
-            symbol = lambda v: 'B' if v is True else 'N' if v is False else str(v),
+            symbol = lambda v: 'B' if v is True else 'N',
             addDims = [0.4]
         )
         output.append("\\end{tikzpicture}")

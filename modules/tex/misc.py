@@ -59,9 +59,10 @@ def list_to_showList(width:int, height:int, in_L:Union[list, dict], **options) -
     exclude:List[Union[int, Tuple[int,int]]] = options.get("exclude", [])
 
     if type(in_L) == list:
-        flat_L = [symbol(item) for item in __filter_exclude_list(in_L,width,exclude,default)]
+        # default ne devrait pas subir symbol
+        flat_L = [item if item is default else symbol(item) for item in __filter_exclude_list(in_L,width,exclude,default)]
     else:
-        flat_L = [symbol(item) for item in __filter_exclude_dict(in_L,width,height,exclude,default)]
+        flat_L = [item if item is default else symbol(item) for item in __filter_exclude_dict(in_L,width,height,exclude,default)]
     M = max(len(item) for item in flat_L)
     flat_sized_L = [" "*(M-len(item))+item for item in flat_L]
     out_L = [",".join(flat_sized_L[i:i+width])+',' for i in range(0, width*height, width)]
@@ -81,6 +82,18 @@ def list_to_showList(width:int, height:int, in_L:Union[list, dict], **options) -
     return output
 
 def list_command(width:int, height:int, in_L:Union[list, dict], **options) -> List[str]:
+    """
+    width: largeur de la grille
+    height: hauteur de la grille
+    in_L: liste ou dictionnaire des items à afficher
+    options:
+        symbol: fonction pour transformer un item en string
+        default: valeur par défaut si item absent
+        cor: si True, le code est conditionné par \\ifthenelse{\\showCor=1}{...}{}
+        varname: nom de la variable tex à utiliser dans les commandes. Par défaut \\item
+        commands: liste de commandes tex à exécuter pour chaque item. Par défaut ["\\draw <coord> node[scale=1]{\\item};"]
+        exclude: liste d'items à exclure (index ou (i,j))
+    """
     assert set(options) <= {"symbol", "default", "cor", "exclude", "varname", "commands"}
     if len(in_L) == 0:
         return []

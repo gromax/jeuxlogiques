@@ -30,7 +30,8 @@ class Undead:
             self.__data.width,
             self.__data.height,
             self.__data.mirrors,
-            symbol = lambda item: "L" if item is True else "R" if item is False else " ",
+            default = " ",
+            symbol = lambda item: "L" if item is True else "R",
             macroname = "undead",
         )
         output += sideItems(
