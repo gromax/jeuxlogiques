@@ -2,7 +2,7 @@ from typing import Dict, List, Tuple, Union
 from modules.container.slant import Data
 from ortools.sat.python import cp_model
 
-class SlantSolver:
+class Solver:
     __width:int
     __height:int
     __constraints:Dict[Tuple[int,int],int]

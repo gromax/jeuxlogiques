@@ -1,7 +1,7 @@
 from typing import List, Union
 from modules.tathamdecoder.slant import decoder
 from modules.container.slant import Data
-from modules.solvers.slant import SlantSolver
+from modules.solvers.slant import Solver
 from modules.tex.misc import list_to_showList
 
 class Slant:
@@ -13,7 +13,7 @@ class Slant:
         # pour l'instant seulement avec tatham
         assert "tatham" in options
         self.__data = decoder(options['tatham'])
-        solver = SlantSolver(self.__data)
+        solver = Solver(self.__data)
         self.__sol = solver.solve()
 
     def tex(self):
