@@ -1,13 +1,16 @@
 from typing import Dict, List, Tuple, Union
 from ortools.sat.python import cp_model
+from modules.container.nurikabe import Data
 
 class Solver:
-    __size:int
-    __content:Dict[Tuple[int,int],int]
+    __width:int
+    __height:int
+    __clues:Dict[Tuple[int,int],int]
 
-    def __init__(self, size:int, content:Dict[Tuple[int,int], int]):
-        self.__size = size
-        self.__content = content
+    def __init__(self, data:Data):
+        self.__width = data.width
+        self.__height = data.height
+        self.__clues = data.clues
 
     def __neighbors(self, i:int, j:int):
         """
@@ -16,14 +19,14 @@ class Solver:
         for di,dj in [(1,0),(-1,0),(0,1),(0,-1)]:
             ni = i+di
             nj = j+dj
-            if 0 <= ni < self.__size and 0 <= nj < self.__size:
+            if 0 <= ni < self.__height and 0 <= nj < self.__width:
                 yield ni,nj
     
     def solve(self) -> Union[List[bool], False]:
-        N = self.__size**2
-        Islands = len(self.__content)
-        posIslands = list(self.__content.keys())
-        sizeIslands = list(self.__content.values())
+        N = self.__height * self.__width
+        Islands = len(self.__clues)
+        posIslands = list(self.__clues.keys())
+        sizeIslands = list(self.__clues.values())
 
         model = cp_model.CpModel()
 
@@ -32,10 +35,10 @@ class Solver:
         # -------------------------
         cell = {}
         river = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 cell[i,j] = model.NewIntVar(0,Islands,f"c_{i}_{j}")
-                if (i,j) in self.__content:
+                if (i,j) in self.__clues:
                     index = posIslands.index((i,j))
                     model.Add(cell[i,j] == index+1)
                 river[i,j] = model.NewBoolVar(f"r_{i}_{j}")
@@ -51,7 +54,7 @@ class Solver:
         #-----------------------------
         # nombre de cellules rivière 
         #-----------------------------
-        n_river = model.NewIntVar(1, N, f"size")
+        n_river = model.NewIntVar(1, N, f"river size")
         model.Add(n_river == sum(river.values()))
 
         # -------------------------
@@ -59,25 +62,25 @@ class Solver:
         # -------------------------
         # on ne connaît pas la case racine il faut donc des variables pour cela
         root = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
-                root[i,j] = model.NewBoolVar(f"root_{i}_{j}")
+        for i in range(self.__height):
+            for j in range(self.__width):
+                root[i,j] = model.NewBoolVar(f"river root is ({i},{j})")
                 # case numérotée pas sur la rivière
-                if (i,j) in self.__content:
+                if (i,j) in self.__clues:
                     model.Add(root[i,j] == False)
 
         # Une seule racine
         model.Add(sum(root.values()) == 1)
 
         # La cellule root doit être active
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 model.Add(root[i,j] <= river[i,j])
 
         # flux river
         f_river = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 for ni,nj in self.__neighbors(i,j):
                     # flux pour river
                     f_river[i,j,ni,nj] = model.NewIntVar(0, N, f"f_river_{i}_{j}_{ni}_{nj}")
@@ -89,8 +92,8 @@ class Solver:
         # conservation du flux rivière
         # -------------------------
 
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 incoming = []
                 outgoing = []
 
@@ -110,8 +113,8 @@ class Solver:
         # pas de mare 2x2
         # -------------------------
 
-        for i in range(self.__size - 1):
-            for j in range(self.__size - 1):
+        for i in range(self.__height - 1):
+            for j in range(self.__width - 1):
                 mare = [
                     river[i, j],
                     river[i + 1, j],
@@ -157,12 +160,12 @@ class Solver:
             # -------------------------
             # Appartenance aux îles
             # -------------------------
-            for i in range(self.__size):
-                for j in range(self.__size):
+            for i in range(self.__height):
+                for j in range(self.__width):
                     is_on_island[island_i, i, j] = model.NewBoolVar(f"ison_{island_i}_{i}_{j}")
                     if (i,j) == (i_root, j_root):
                         model.Add(is_on_island[island_i, i, j] == True)
-                    elif (i,j) in self.__content or self.__dist(i_root,j_root,i,j)>=S:
+                    elif (i,j) in self.__clues or self.__dist(i_root,j_root,i,j)>=S:
                         model.Add(is_on_island[island_i, i, j] == False)
                     model.Add(cell[i,j] == island_i+1).OnlyEnforceIf(is_on_island[island_i, i, j])
                     model.Add(cell[i,j] != island_i+1).OnlyEnforceIf(is_on_island[island_i, i, j].Not())
@@ -170,8 +173,8 @@ class Solver:
             # -------------------------
             # Création des flux
             # -------------------------
-            for i in range(self.__size):
-                for j in range(self.__size):
+            for i in range(self.__height):
+                for j in range(self.__width):
                     for ni,nj in self.__neighbors(i,j):
                         # flux pour l'île
                         f_island[island_i,i,j,ni,nj] = model.NewIntVar(0, S, f"f_island_{island_i}_{i}_{j}_{ni}_{nj}")
@@ -182,8 +185,8 @@ class Solver:
             # -------------------------
             # conservation du flux
             # -------------------------
-            for i in range(self.__size):
-                for j in range(self.__size):
+            for i in range(self.__height):
+                for j in range(self.__width):
                     incoming = []
                     outgoing = []
 
@@ -212,7 +215,7 @@ class Solver:
         if status == cp_model.INFEASIBLE:
             print("Insoluble !")
         if status == cp_model.FEASIBLE or status == cp_model.OPTIMAL:
-            return [solver.Value(river[index//self.__size,index%self.__size]) for index in range(self.__size**2)]
+            return [solver.Value(river[index//self.__width,index%self.__width]) for index in range(N)]
         return False
     
     def __two_numbers(self) -> List[Tuple[int,int]]:
@@ -220,13 +223,13 @@ class Solver:
         retourne la liste des cases ayant 2 voisins numérotés
         """
         output = []
-        for i in range(self.__size):
-            for j in range(self.__size):
-                if (i,j) in self.__content:
+        for i in range(self.__height):
+            for j in range(self.__width):
+                if (i,j) in self.__clues:
                     continue
                 count = 0
                 for ni,nj in self.__neighbors(i,j):
-                    if (ni,nj) in self.__content:
+                    if (ni,nj) in self.__clues:
                         count += 1
                 if count == 2:
                     output.append((i,j))

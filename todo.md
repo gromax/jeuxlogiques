@@ -18,7 +18,7 @@ Il reste quelques problèmes :
 - [x] mettre un container pour galaxy
 - [ ] mettre un container pour kenken
 - [x] mettre un container pour loopy
-- [ ] mettre un container pour nurikabe
+- [x] mettre un container pour nurikabe
 - [ ] mettre un container pour techtonic
 - [ ] mettre un container pour unequal
 - [ ] mettre un container pour yingyang
