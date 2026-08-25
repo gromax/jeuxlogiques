@@ -1,6 +1,5 @@
-from typing import List, Dict, Tuple, Union
+from typing import List, Union
 
-from modules.tathamdecoder.loopy import decoder
 from modules.primitives.cellgroup import CellGroup
 from modules.solvers.loopy import Solver
 from modules.container.loopy import Data
@@ -15,7 +14,7 @@ class Loopy:
         initialise les cellules selon le code fournit
         """
         assert set(options) <= {"tatham"}, "options incorrectes"
-        self.__data = decoder(options["tatham"])
+        self.__data = Data.decode(options["tatham"])
         solver = Solver(self.__data)
         self.__sol = solver.solve()
 
