@@ -1,6 +1,5 @@
-from typing import List, Tuple, Union
+from typing import List, Union
 from modules.primitives.cellgroup import CellGroup
-from modules.tathamdecoder.galaxy import decoder
 from modules.solvers.galaxy import Solver
 from modules.container.galaxy import Data
 
@@ -12,7 +11,7 @@ class Galaxy:
         assert set(options) <= {"tatham"}, "options incorrectes"
         # pour l'instant seule possibilité : tatham
         assert "tatham" in options
-        self.__data = decoder(options["tatham"])
+        self.__data = Data.decode(options["tatham"])
         solver = Solver(self.__data)
         self.__sol = solver.solve()
 
