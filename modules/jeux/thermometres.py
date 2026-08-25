@@ -1,6 +1,5 @@
 from typing import List, Union, Dict, Tuple
 from modules.htmldecoder.thermometres import HtmlDecoder
-from modules.tathamdecoder.thermometres import decoder
 from modules.container.thermometres import Data
 from modules.solvers.thermometres import Solver
 from modules.tex.misc import sideItems, list_to_showList
@@ -20,7 +19,7 @@ class Thermometres:
         elif "html" in options:
             self.__data = HtmlDecoder.decode(options["html"])
         elif "tatham" in options:
-            self.__data = decoder(options["tatham"])
+            self.__data = Data.decode(options["tatham"])
         else:
             raise ValueError("Aucun paramètre valide")
         solver = Solver(self.__data)
