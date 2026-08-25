@@ -1,6 +1,5 @@
 from typing import List, Dict, Tuple, Union
 
-from modules.tathamdecoder.palisade import decoder
 from modules.primitives.cellgroup import CellGroup
 from modules.solvers.palisade import Solver
 from modules.container.palisade import Data
@@ -15,7 +14,7 @@ class Palisade:
         initialise les cellules selon le code fournit
         """
         assert set(options) <= {"tatham"}, "options incorrectes"
-        self.__data = decoder(options["tatham"])
+        self.__data = Data.decode(options["tatham"])
         solver = Solver(self.__data)
         self.__sol = solver.solve()
 

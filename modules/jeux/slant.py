@@ -1,5 +1,4 @@
 from typing import List, Union
-from modules.tathamdecoder.slant import decoder
 from modules.container.slant import Data
 from modules.solvers.slant import Solver
 from modules.tex.misc import list_to_showList
@@ -12,7 +11,7 @@ class Slant:
         assert set(options) <= {"tatham"}, "options incorrectes"
         # pour l'instant seulement avec tatham
         assert "tatham" in options
-        self.__data = decoder(options['tatham'])
+        self.__data = Data.decode(options['tatham'])
         solver = Solver(self.__data)
         self.__sol = solver.solve()
 

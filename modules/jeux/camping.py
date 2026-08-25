@@ -1,5 +1,4 @@
 from typing import List, Tuple, Union
-from modules.tathamdecoder.camping import decoder
 from modules.container.camping import Data
 from modules.solvers.camping import Solver
 from modules.tex.misc import list_to_showList
@@ -12,7 +11,7 @@ class Camping:
         assert set(options) <= {"tatham"}, "options incorrectes"
         # pour l'instant seule possibilité : tatham
         assert "tatham" in options
-        self.__data = decoder(options["tatham"])
+        self.__data = Data.decode(options["tatham"])
         s = Solver(self.__data)
         self.__sol = s.solve()
 

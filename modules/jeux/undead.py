@@ -1,5 +1,4 @@
 from typing import List, Union
-from modules.tathamdecoder.undead import decoder
 from modules.solvers.undead import Solver
 from modules.container.undead import Data
 from modules.tex.misc import sideItems, list_to_showList
@@ -12,7 +11,7 @@ class Undead:
         assert set(options) <= {"tatham"}, "options incorrectes"
         # pour l'instant seulement avec tatham
         assert "tatham" in options
-        self.__data = decoder(options["tatham"])
+        self.__data = Data.decode(options["tatham"])
         solver = Solver(self.__data)
         self.__sol = solver.solve()
 

@@ -56,3 +56,26 @@ class Data:
     @property
     def clues(self) -> Dict[Tuple[int,int], int]:
         return self.__clues.copy()
+
+    @classmethod
+    def decode(cls, game_id:str) -> "Data":
+        """
+        game_id: chaîne selon jeu keen de simon tatham
+        """
+
+        sizeStr, contentStr = game_id.split(':')
+        wStr, hStr = sizeStr.split('x')
+        width = int(wStr)
+        height = int(hStr)
+
+        constraints = {}
+        index = 0
+        W = width + 1 # indices sur les lignes donc une colonne de plus
+        for car in contentStr:
+            if car in "01234":
+                constraints[index//W, index%W] = int(car)
+                index += 1
+            else:
+                index += ord(car) - ord('a') + 1
+        return Data(width, height, constraints)
+
