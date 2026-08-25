@@ -1,5 +1,4 @@
 from modules.container.loopy import Data
-from modules.primitives.direction import Direction
 
 def decoder(game_id:str) -> Data:
     """

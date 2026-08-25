@@ -2,13 +2,13 @@ from typing import List, Dict, Tuple, Union
 
 from modules.tathamdecoder.loopy import decoder
 from modules.primitives.cellgroup import CellGroup
-from modules.solvers.loopy import LoopySolver
+from modules.solvers.loopy import Solver
 from modules.container.loopy import Data
 from modules.tex.misc import list_to_showList
 
 class Loopy:
     __data:Data
-    __sol:Union[List[List[bool]], False]
+    __sol:Union[List[bool], False]
 
     def __init__(self, **options):
         """
@@ -16,8 +16,8 @@ class Loopy:
         """
         assert set(options) <= {"tatham"}, "options incorrectes"
         self.__data = decoder(options["tatham"])
-        loopy_solver = LoopySolver(self.__data)
-        self.__sol = loopy_solver.solve()
+        solver = Solver(self.__data)
+        self.__sol = solver.solve()
 
     def tex(self) -> str:
         """

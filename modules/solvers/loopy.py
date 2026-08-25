@@ -1,9 +1,9 @@
-from typing import Dict, Tuple
+from typing import Dict, Tuple, List, Union
 from modules.container.loopy import Data
 from ortools.sat.python import cp_model
 
 DELTAS = ((1,0),(-1,0),(0,1),(0,-1))
-class LoopySolver:
+class Solver:
     __width:int
     __height:int
     __clues:Dict[Tuple[int,int],int]
@@ -13,7 +13,7 @@ class LoopySolver:
         self.__height = data.height
         self.__clues = data.clues
 
-    def __neighbors(self, i:int, j:int, with_ext:bool):
+    def __neighbors(self, i:int, j:int, with_ext:bool) -> List[Tuple[int,int]]:
         """
         voisins
         """
@@ -22,10 +22,10 @@ class LoopySolver:
             return [(ni,nj) if 0 <= ni < self.__height and 0 <= nj < self.__width else (-1,-1) for (ni,nj) in pos]
         return [(ni,nj) for (ni,nj) in pos if 0 <= ni < self.__height and 0 <= nj < self.__width]
 
-    def __is_border(self, i:int, j:int):
+    def __is_border(self, i:int, j:int) -> bool:
         return i==0 or j==0 or i==self.__height-1 or j==self.__width-1
 
-    def solve(self):
+    def solve(self) -> Union[List[bool],False]:
         N = self.__height * self.__width
         model = cp_model.CpModel()
 
