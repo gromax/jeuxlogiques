@@ -1,4 +1,4 @@
-from typing import Tuple, List, Dict
+from typing import Tuple, Dict
 
 class Data:
     __width:int
