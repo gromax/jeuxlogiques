@@ -51,7 +51,7 @@ def list_to_showList(width:int, height:int, in_L:Union[list, dict], **options) -
         return []
     s = options.get('size', -1)
     symbol = options.get('symbol', lambda item:str(item))
-    default = options.get('default', '')
+    default = str(options.get('default', ''))
     macroname = options.get('macroname', 'showList')
     cor = options.get('cor', False)
     addDims = options.get('addDims', [])
