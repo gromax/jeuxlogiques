@@ -1,6 +1,6 @@
 from typing import List, Union
 from modules.tathamdecoder.undead import decoder
-from modules.solvers.undead import UndeadSolver
+from modules.solvers.undead import Solver
 from modules.container.undead import Data
 from modules.tex.misc import sideItems, list_to_showList
 
@@ -13,8 +13,8 @@ class Undead:
         # pour l'instant seulement avec tatham
         assert "tatham" in options
         self.__data = decoder(options["tatham"])
-        s = UndeadSolver(self.__data)
-        self.__sol = s.solve()
+        solver = Solver(self.__data)
+        self.__sol = solver.solve()
 
     def tex(self):
         output = [

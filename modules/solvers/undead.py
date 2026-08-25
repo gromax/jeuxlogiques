@@ -2,7 +2,7 @@ from typing import Dict, Tuple, Union, List
 from modules.container.undead import Data
 from ortools.sat.python import cp_model
 
-class UndeadSolver:
+class Solver:
     __width:int
     __height:int
     __mirrors:Dict[Tuple[int,int],bool] # True pour left
