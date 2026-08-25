@@ -2,7 +2,7 @@ from ortools.sat.python import cp_model
 from typing import Tuple, List, Union, Dict
 from modules.primitives.cellgroup import CellGroup
 
-class TechtonicSolver:
+class Solver:
     __width:int # largeur
     __height:int # hauteur
     __numbers:Dict[Tuple[int,int],int]

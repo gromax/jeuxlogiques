@@ -1,4 +1,4 @@
-from typing import List, Tuple, Dict, Union
+from typing import List, Union
 from modules.primitives.direction import Direction
 from ortools.sat.python import cp_model
 from modules.container.adjacent import Data

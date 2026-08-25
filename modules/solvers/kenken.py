@@ -1,7 +1,7 @@
 from ortools.sat.python import cp_model
 from typing import Tuple, List, Union
 
-class KenkenSolver:
+class Solver:
     S:int # taille
     constraints:List[Tuple[List[Tuple[int, int]], str, int]] # forme [ ( [(i,j), ...], op, k), ... ]
 

@@ -2,7 +2,7 @@ from typing import List, Tuple
 from modules.primitives.direction import Direction
 from ortools.sat.python import cp_model
 
-class UnequalSolver:
+class Solver:
     S:int # taille
     constraints:List[Tuple[int,int,Direction]] # forme i,j,dir (parmi UDLR)
     knowns:List[Tuple[int,int,int]] # forme i,j,value

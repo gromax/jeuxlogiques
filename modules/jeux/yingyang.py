@@ -1,7 +1,7 @@
 from typing import Tuple, List, Union, Dict
 from modules.htmldecoder.yingyang import YingyangHtmlDecoder
 from modules.tathamdecoder.yingyang import TathamYingYangDecoder
-from modules.solvers.yingyang import YingyangSolver
+from modules.solvers.yingyang import Solver
 from modules.tex.misc import list_to_showList
 
 class Yingyang:
@@ -24,8 +24,8 @@ class Yingyang:
             self.__content = yd.content
             self.__size = yd.size
             self.__game_id = yd.game_id
-        yingyanngSolver = YingyangSolver(self.__size, self.__content)
-        self.__sol = yingyanngSolver.solve()
+        solver = Solver(self.__size, self.__content)
+        self.__sol = solver.solve()
 
     def tex(self):
         output = [

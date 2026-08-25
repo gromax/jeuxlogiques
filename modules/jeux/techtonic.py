@@ -1,6 +1,6 @@
 from typing import Tuple, List, Union, Dict
 from modules.tathamdecoder.techtonic import TathamTechtonicDecoder
-from modules.solvers.techtonic import TechtonicSolver
+from modules.solvers.techtonic import Solver
 
 from modules.primitives.cellgroup import CellGroup
 
@@ -22,7 +22,7 @@ class Techtonic:
         self.__width = ttd.width
         self.__height = ttd.height
         self.__zones = ttd.zones
-        solver = TechtonicSolver(self.__width, self.__height, self.__numbers, self.__zones)
+        solver = Solver(self.__width, self.__height, self.__numbers, self.__zones)
         self.__sol = solver.solve()
 
     def tex(self):

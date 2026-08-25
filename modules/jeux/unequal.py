@@ -1,6 +1,6 @@
 from typing import List, Tuple, Union
 from modules.tathamdecoder.unequal import TathamUnequalDecoder
-from modules.solvers.unequal import UnequalSolver
+from modules.solvers.unequal import Solver
 from modules.primitives.direction import Direction
 
 class Unequal:
@@ -22,8 +22,8 @@ class Unequal:
         self.__size = tud.size
         self.__knowns = tud.knowns
         self.__constraints = tud.constraints
-        us = UnequalSolver(self.__size, self.__constraints, self.__knowns)
-        self.__sol = us.solve()
+        solver = Solver(self.__size, self.__constraints, self.__knowns)
+        self.__sol = solver.solve()
 
     def __ineq_symbol(self, constraint:Tuple[int,int,Direction]) -> str:
         iline,icol,d = constraint

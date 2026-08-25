@@ -2,7 +2,7 @@ from typing import Dict, Tuple, Union
 
 from ortools.sat.python import cp_model
 
-class YingyangSolver:
+class Solver:
     __size:int
     __content:Dict[Tuple[int,int],bool]
 

@@ -1,6 +1,6 @@
 from typing import Tuple, List, Union
 from modules.tathamdecoder.kenken import TathamKenkenDecoder
-from modules.solvers.kenken import KenkenSolver
+from modules.solvers.kenken import Solver
 
 from modules.primitives.cellgroup import CellGroup
 
@@ -20,8 +20,8 @@ class Kenken:
         self.__constraints = tkd.constraints
         self.__size = tkd.size
         self.__zones = tkd.zones
-        kenSolver = KenkenSolver(self.__size, self.__constraints)
-        self.__sol = kenSolver.solve()
+        solver = Solver(self.__size, self.__constraints)
+        self.__sol = solver.solve()
 
 
     def __operToTex(self, operName:str, operValue:int) -> str:
