@@ -1,38 +1,32 @@
 from typing import Dict, Tuple
-
+from modules.container.loopy import Data
 from ortools.sat.python import cp_model
 
+DELTAS = ((1,0),(-1,0),(0,1),(0,-1))
 class LoopySolver:
-    __size:int
-    __constraints:Dict[Tuple[int,int],int]
+    __width:int
+    __height:int
+    __clues:Dict[Tuple[int,int],int]
 
-    def __init__(self, size:int, constraints:Dict[Tuple[int,int], int]):
-        self.__size = size
-        self.__constraints = constraints
+    def __init__(self, data:Data):
+        self.__width = data.width
+        self.__height = data.height
+        self.__clues = data.clues
 
-    def __neighbors(self, i:int, j:int):
+    def __neighbors(self, i:int, j:int, with_ext:bool):
         """
-        itérateur
+        voisins
         """
-        for di,dj in [(1,0),(-1,0),(0,1),(0,-1)]:
-            ni = i+di
-            nj = j+dj
-            if 0 <= ni < self.__size and 0 <= nj < self.__size:
-                yield ni,nj
-    
-    def __neighbors_with_ext(self, i:int, j:int):
-        """
-        itérateur
-        """
-        for di,dj in [(1,0),(-1,0),(0,1),(0,-1)]:
-            ni = i+di
-            nj = j+dj
-            # ajout de cases fictives autour
-            if -1 <= ni <= self.__size and -1 <= nj <= self.__size:
-                yield ni,nj
+        pos = [(i+di, j+dj) for (di,dj) in DELTAS]
+        if with_ext:
+            return [(ni,nj) if 0 <= ni < self.__height and 0 <= nj < self.__width else (-1,-1) for (ni,nj) in pos]
+        return [(ni,nj) for (ni,nj) in pos if 0 <= ni < self.__height and 0 <= nj < self.__width]
+
+    def __is_border(self, i:int, j:int):
+        return i==0 or j==0 or i==self.__height-1 or j==self.__width-1
 
     def solve(self):
-        N = self.__size**2
+        N = self.__height * self.__width
         model = cp_model.CpModel()
 
         # -------------------------
@@ -40,26 +34,28 @@ class LoopySolver:
         # -------------------------
 
         cells = {}
-        for i in range(-1,self.__size+1):
-            for j in range(-1,self.__size+1):
-                cells[i,j] = model.NewBoolVar(f"c_{i}_{j}")
-                if not(0<= i < self.__size and 0 <= j < self.__size):
-                    model.Add(cells[i,j] == False)
+        # cellule extérieure
+        cells[(-1,-1)] = model.NewBoolVar(f"c_ext")
+        model.Add(cells[-1,-1] == False)
+
+        for iline in range(self.__height):
+            for icol in range(self.__width):
+                cells[iline,icol] = model.NewBoolVar(f"c_{iline}_{icol}")
 
         # -------------------------
         # contraintes
         # -------------------------
-        for (iline,icol),walls in self.__constraints.items():
+        for (iline,icol), walls in self.__clues.items():
             # si c[i,j] = 0 il faut que cela fasse walls
             # sinon il faut que cela fasse 4-walls
-            s = sum(cells[i,j] for i,j in self.__neighbors_with_ext(iline,icol))
-            model.Add( s == walls).OnlyEnforceIf(cells[iline,icol].Not())
-            model.Add( s == 4-walls).OnlyEnforceIf(cells[iline,icol])
+            s = sum(cells[i,j] for i,j in self.__neighbors(iline,icol,True))
+            model.Add(s == walls).OnlyEnforceIf(cells[iline,icol].Not())
+            model.Add(s == 4-walls).OnlyEnforceIf(cells[iline,icol])
 
         #-------------------------
         # nombre de cellules in
         #-------------------------
-        n_actives = model.NewIntVar(1, N, f"size")
+        n_actives = model.NewIntVar(1, N, "size in")
         model.Add(n_actives == sum(cells.values()))
 
         # -------------------------
@@ -67,80 +63,79 @@ class LoopySolver:
         # -------------------------
         # on ne connaît pas la case racine il faut donc des variables pour cela
         root = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
-                root[i,j] = model.NewBoolVar(f"root_{i}_{j}")
+        for iline in range(self.__height):
+            for icol in range(self.__width):
+                root[iline,icol] = model.NewBoolVar(f"root_{iline}_{icol}")
 
         # Une seule racine
         model.Add(sum(root.values()) == 1)
 
         # La cellule root doit être active
-        for i in range(self.__size):
-            for j in range(self.__size):
-                model.Add(root[i,j] <= cells[i,j])
+        for iline in range(self.__height):
+            for icol in range(self.__width):
+                model.Add(root[iline,icol] <= cells[iline,icol])
 
         # flux
         # il y en aura deux, un pour le in et un pour le out
         f_in = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
-                for ni,nj in self.__neighbors(i,j):
+        for iline in range(self.__height):
+            for icol in range(self.__width):
+                for niline,nicol in self.__neighbors(iline,icol,False):
                     # flux pour in
-                    f_in[i,j,ni,nj] = model.NewIntVar(0, N, f"f_in_{i}_{j}_{ni}_{nj}")
+                    f_in[iline,icol,niline,nicol] = model.NewIntVar(0, N, f"f_in({iline},{icol})->({niline},{nicol})")
                     # flux seulement entre cellules actives
-                    model.Add(f_in[i,j,ni,nj] <= N * cells[i,j])
-                    model.Add(f_in[i,j,ni,nj] <= N * cells[ni,nj])
+                    model.Add(f_in[iline,icol,niline,nicol] <= N * cells[iline,icol])
+                    model.Add(f_in[iline,icol,niline,nicol] <= N * cells[niline,nicol])
 
         f_out = {}
-        for i in range(-1,self.__size+1):
-            for j in range(-1,self.__size+1):
-                for ni,nj in self.__neighbors_with_ext(i,j):
+        for iline in range(self.__height):
+            for icol in range(self.__width):
+                for niline,nicol in self.__neighbors(iline,icol, False):
                     # flux pour out
-                    f_out[i,j,ni,nj] = model.NewIntVar(0, N, f"f_out_{i}_{j}_{ni}_{nj}")
+                    f_out[iline,icol,niline,nicol] = model.NewIntVar(0, N, f"f_out({iline},{icol})->({niline},{nicol})")
                     # flux seulement entre cellules inactives
-                    model.Add(f_out[i,j,ni,nj] <= N * cells[i,j].Not())
-                    model.Add(f_out[i,j,ni,nj] <= N * cells[ni,nj].Not())
+                    model.Add(f_out[iline,icol,niline,nicol] <= N * cells[iline,icol].Not())
+                    model.Add(f_out[iline,icol,niline,nicol] <= N * cells[niline,nicol].Not())
+                if self.__is_border(iline,icol):
+                    # flux venant du bord
+                    f_out[-1,-1,iline,icol] = model.NewIntVar(0, N, f"f_out(ext)->({iline},{icol})")
+                    # flux seulement vers cellules inactives
+                    model.Add(f_out[-1,-1,iline,icol] <= N * cells[iline,icol].Not())
 
         # -------------------------
         # conservation du flux
         # -------------------------
 
         # pour le flux in
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for iline in range(self.__height):
+            for icol in range(self.__width):
                 incoming = []
                 outgoing = []
 
-                for ni,nj in self.__neighbors(i,j):
-                    incoming.append(f_in[ni,nj,i,j])
-                    outgoing.append(f_in[i,j,ni,nj])
+                for niline,nicol in self.__neighbors(iline,icol,False):
+                    incoming.append(f_in[niline,nicol,iline,icol])
+                    outgoing.append(f_in[iline,icol,niline,nicol])
 
-                incoming_sum = sum(incoming)
-                outgoing_sum = sum(outgoing)
-
-                model.Add(incoming_sum - outgoing_sum == 1 - n_actives).OnlyEnforceIf(root[i,j])
-                model.Add(incoming_sum - outgoing_sum == cells[i,j]).OnlyEnforceIf(root[i,j].Not())
+                delta = sum(incoming) - sum(outgoing)
+                model.Add(delta == 1 - n_actives).OnlyEnforceIf(root[iline,icol])
+                model.Add(delta == cells[iline,icol]).OnlyEnforceIf(root[iline,icol].Not())
 
         # pour le flux out, le root est (-1,-1)
-        for i in range(-1,self.__size+1):
-            for j in range(-1,self.__size+1):
+        outgoing_root = []
+        for iline in range(self.__height):
+            for icol in range(self.__width):
                 incoming = []
                 outgoing = []
-
-                for ni,nj in self.__neighbors_with_ext(i,j):
-                    incoming.append(f_out[ni,nj,i,j])
-                    outgoing.append(f_out[i,j,ni,nj])
-
-                incoming_sum = sum(incoming)
-                outgoing_sum = sum(outgoing)
-
-                if (i,j) != (-1,-1):
-                    # cellule normale
-                    model.Add(incoming_sum - outgoing_sum == cells[i,j].Not())
-                else:
-                    # racine
-                    N2 = (self.__size+2)**2
-                    model.Add(incoming_sum - outgoing_sum == 1 - N2 + n_actives)
+                for niline,nicol in self.__neighbors(iline,icol,False):
+                    incoming.append(f_out[niline,nicol,iline,icol])
+                    outgoing.append(f_out[iline,icol,niline,nicol])
+                if self.__is_border(iline,icol):
+                    incoming.append(f_out[-1,-1,iline,icol])
+                    outgoing_root.append(f_out[-1,-1,iline,icol])
+                delta = sum(incoming) - sum(outgoing)
+                model.Add(delta == cells[iline,icol].Not())
+        # racine
+        model.Add(-sum(outgoing_root) == 1 - (N+1) + n_actives)
 
         # -------------------------
         # solve
@@ -153,5 +148,5 @@ class LoopySolver:
         if status == cp_model.INFEASIBLE:
             print("Insoluble !")
         if status == cp_model.FEASIBLE or status == cp_model.OPTIMAL:
-            return [[solver.Value(cells[i,j]) for j in range(self.__size)] for i in range(self.__size)]
+            return [bool(solver.Value(cells[i//self.__width,i%self.__width])) for i in range(N)]
         return False
