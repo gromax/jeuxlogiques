@@ -15,8 +15,7 @@ Il reste quelques problèmes :
 - [ ] ajouter pearl
 - [ ] ajouter range
 - [ ] ajouter loopy irréguliers
-- [ ] mettre un container pour towers
-- [ ] mettre un container pour galaxy
+- [x] mettre un container pour galaxy
 - [ ] mettre un container pour kenken
 - [ ] mettre un container pour loopy
 - [ ] mettre un container pour nurikabe

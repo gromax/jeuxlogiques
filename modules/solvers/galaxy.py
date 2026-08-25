@@ -1,5 +1,5 @@
 from typing import List, Tuple
-
+from container.galaxy import Data
 from ortools.sat.python import cp_model
 
 class GalaxySolver:
@@ -7,10 +7,10 @@ class GalaxySolver:
     W:int
     stars:List[Tuple[int,int]]
 
-    def __init__(self, height:int, width:int, stars:List[Tuple[int,int]]):
-        self.H = height
-        self.W = width
-        self.stars = stars
+    def __init__(self, data:Data):
+        self.H = data.height
+        self.W = data.width
+        self.stars = data.stars
 
     def __sticked_to_star(self, iStar:int) -> List[Tuple[int,int]]:
         """

@@ -1,9 +1,11 @@
 from typing import List, Tuple, Union
 from modules.primitives.cellgroup import CellGroup
-from modules.tathamdecoder.galaxy import TathamGalaxyDecoder
+from modules.tathamdecoder.galaxy import decoder
 from modules.solvers.galaxy import GalaxySolver
+from modules.container.galaxy import Data
 
 class Galaxy:
+    __data:Data
     __game_id:str
     __height:int
     __width:int
@@ -14,12 +16,8 @@ class Galaxy:
         assert set(options) <= {"tatham"}, "options incorrectes"
         # pour l'instant seule possibilité : tatham
         assert "tatham" in options
-        tgd = TathamGalaxyDecoder(options["tatham"])
-        self.__game_id = f"tatham id = {tgd.game_id}"
-        self.__height = tgd.height
-        self.__width = tgd.width
-        self.__stars = tgd.stars
-        gs = GalaxySolver(self.__height, self.__width, self.__stars)
+        self.__data = decoder(options["tatham"])
+        gs = GalaxySolver(self.__data)
         self.__sol = gs.solve()
 
     def __groups(self):
@@ -37,11 +35,13 @@ class Galaxy:
         """
         Retourne le code LaTeX pour générer le jeu
         """
-        output = ["%id: "+self.__game_id]
+        w = self.__data.width
+        h = self.__data.height
+        output = ["%id="+self.__data.game_id]
         output.append("\\begin{tikzpicture}[scale=.7]")
-        output.append("\\draw[line width=0.5pt] (0,0) grid[step=1] ("+str(self.__width)+","+str(self.__height)+");")
-        output.append("\\begin{scope}[shift={(0,"+str(self.__height)+")}, yscale=-1]")
-        output.append("\\foreach \\x/\\y in {"+",".join(f"{icol/2+.5}/{iline/2+.5}" for iline,icol in self.__stars)+"} \\draw[fill=white] (\\x,\\y) circle(0.3);")
+        output.append("\\draw[line width=0.5pt] (0,0) grid[step=1] ("+str(w)+","+str(h)+");")
+        output.append("\\begin{scope}[shift={(0,"+str(h)+")}, yscale=-1]")
+        output.append("\\foreach \\x/\\y in {"+",".join(f"{icol/2+.5}/{iline/2+.5}" for iline,icol in self.__data.stars)+"} \\draw[fill=white] (\\x,\\y) circle(0.3);")
         if self.__sol is not False:
             output.append("\\ifthenelse{\\showCor = 1}{")
             for g in self.__groups().values():
