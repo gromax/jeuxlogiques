@@ -1,7 +1,7 @@
 from typing import Tuple, List, Union, Dict
 from modules.htmldecoder.nurikabe import NurikabeHtmlDecoder
 from modules.tathamdecoder.nurikabe import TathamNurikabeDecoder
-from modules.solvers.nurikabe import NurikabeSolver
+from modules.solvers.nurikabe import Solver
 from modules.tex.misc import list_to_showList
 
 class Nurikabe:
@@ -24,8 +24,8 @@ class Nurikabe:
             self.__content = yd.content
             self.__size = yd.size
             self.__game_id = yd.game_id
-        ns = NurikabeSolver(self.__size, self.__content)
-        self.__sol = ns.solve()
+        solver = Solver(self.__size, self.__content)
+        self.__sol = solver.solve()
 
     def tex(self):
         output = [

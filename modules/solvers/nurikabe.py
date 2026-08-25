@@ -1,8 +1,7 @@
 from typing import Dict, List, Tuple, Union
-
 from ortools.sat.python import cp_model
 
-class NurikabeSolver:
+class Solver:
     __size:int
     __content:Dict[Tuple[int,int],int]
 
