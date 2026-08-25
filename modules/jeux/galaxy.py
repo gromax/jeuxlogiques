@@ -1,15 +1,11 @@
 from typing import List, Tuple, Union
 from modules.primitives.cellgroup import CellGroup
 from modules.tathamdecoder.galaxy import decoder
-from modules.solvers.galaxy import GalaxySolver
+from modules.solvers.galaxy import Solver
 from modules.container.galaxy import Data
 
 class Galaxy:
     __data:Data
-    __game_id:str
-    __height:int
-    __width:int
-    __stars:List[Tuple[int,int]]
     __sol:Union[List[List[int]], False]
 
     def __init__(self, **options):
@@ -17,8 +13,8 @@ class Galaxy:
         # pour l'instant seule possibilité : tatham
         assert "tatham" in options
         self.__data = decoder(options["tatham"])
-        gs = GalaxySolver(self.__data)
-        self.__sol = gs.solve()
+        solver = Solver(self.__data)
+        self.__sol = solver.solve()
 
     def __groups(self):
         assert self.__sol is not False

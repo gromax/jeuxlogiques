@@ -2,7 +2,7 @@ from typing import List, Tuple
 from container.galaxy import Data
 from ortools.sat.python import cp_model
 
-class GalaxySolver:
+class Solver:
     H:int
     W:int
     stars:List[Tuple[int,int]]
