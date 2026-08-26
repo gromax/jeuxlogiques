@@ -40,7 +40,7 @@ class Game:
             cor = False,
             default = ' ',
             macroname = "showCircleList",
-            symbol = lambda v: 'B' if v is True else 'N',
+            symbol = lambda v: 'N' if v is True else 'B',
             addDims = [0.3]
         )
         output.append("\\end{tikzpicture}")
