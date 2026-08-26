@@ -173,6 +173,77 @@
 	\end{scope}
 }
 
+
+% connexion horizontale
+% #1=width, #2=height, #3=list
+\newcommand{\connectListH}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(0,{#2-.5})},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{3} }{
+            % trait complet
+    		\draw[line width=1pt] (\value{col},\value{row}) --++ (1,0);%
+		}{
+			\ifthenelse{ \equal{\it}{2} }{
+				% début seulement
+				\draw[line width=1pt] (\value{col},\value{row}) --++ (.5,0);%
+			}{
+                \ifthenelse{ \equal{\it}{1} }{
+                    % fin seulement
+                    \draw[line width=1pt] (\value{col},\value{row}) ++ (.5,0) --++(.5,0);%
+                }{				
+				    % rien
+				}
+			}
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+
+
+% connexion verticale
+% #1=width, #2=height, #3=list
+\newcommand{\connectListV}[3]{
+	\setcounter{col}{0}
+	\setcounter{row}{0}
+	\begin{scope}[shift={(.5,#2)},yscale=-1]
+	\foreach \it in #3 {
+		\ifthenelse{ \value{col}= #1 }{
+			\stepcounter{row};
+			\setcounter{col}{0};
+		}{}
+		\ifthenelse{ \equal{\it}{3} }{
+            % trait complet
+    		\draw[line width=1pt] (\value{col},\value{row}) --++ (0,1);%
+		}{
+			\ifthenelse{ \equal{\it}{2} }{
+				% début seulement
+				\draw[line width=1pt] (\value{col},\value{row}) --++ (0,.5);%
+			}{
+                \ifthenelse{ \equal{\it}{1} }{
+                    % fin seulement
+                    \draw[line width=1pt] (\value{col},\value{row}) ++ (0,.5) --++(0,.5);%
+                }{				
+				    % rien
+				}
+			}
+		}
+
+		\stepcounter{col};
+	}
+	\end{scope}
+}
+
+
+
 % à vérifier
 
 \newcommand\sudokuGrid{
@@ -354,71 +425,6 @@
 
 
 
-% connexion horizontale
-\newcommand{\connectListH}[2]{%#size ; #2 list
-	\setcounter{col}{0}
-	\setcounter{row}{0}
-	\begin{scope}[shift={(0,{#1-.5})},yscale=-1]
-	\foreach \it in #2 {
-		\ifthenelse{ \value{col}= #1 }{
-			\stepcounter{row};
-			\setcounter{col}{0};
-		}{}
-		\ifthenelse{ \equal{\it}{3} }{
-            % trait complet
-    		\draw[line width=1pt] (\value{col},\value{row}) --++ (1,0);%
-		}{
-			\ifthenelse{ \equal{\it}{2} }{
-				% début seulement
-				\draw[line width=1pt] (\value{col},\value{row}) --++ (.5,0);%
-			}{
-                \ifthenelse{ \equal{\it}{1} }{
-                    % fin seulement
-                    \draw[line width=1pt] (\value{col},\value{row}) ++ (.5,0) --++(.5,0);%
-                }{				
-				    % rien
-				}
-			}
-		}
-
-		\stepcounter{col};
-	}
-	\end{scope}
-}
-
-
-
-% connexion verticale
-\newcommand{\connectListV}[2]{%#size ; #2 list
-	\setcounter{col}{0}
-	\setcounter{row}{0}
-	\begin{scope}[shift={(.5,#1)},yscale=-1]
-	\foreach \it in #2 {
-		\ifthenelse{ \value{col}= #1 }{
-			\stepcounter{row};
-			\setcounter{col}{0};
-		}{}
-		\ifthenelse{ \equal{\it}{3} }{
-            % trait complet
-    		\draw[line width=1pt] (\value{col},\value{row}) --++ (0,1);%
-		}{
-			\ifthenelse{ \equal{\it}{2} }{
-				% début seulement
-				\draw[line width=1pt] (\value{col},\value{row}) --++ (0,.5);%
-			}{
-                \ifthenelse{ \equal{\it}{1} }{
-                    % fin seulement
-                    \draw[line width=1pt] (\value{col},\value{row}) ++ (0,.5) --++(0,.5);%
-                }{				
-				    % rien
-				}
-			}
-		}
-
-		\stepcounter{col};
-	}
-	\end{scope}
-}
 
 
 

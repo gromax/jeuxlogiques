@@ -21,4 +21,4 @@ Il reste quelques problèmes :
 - [x] mettre un container pour nurikabe
 - [ ] mettre un container pour techtonic
 - [ ] mettre un container pour unequal
-- [ ] mettre un container pour yingyang
+- [x] mettre un container pour yingyang

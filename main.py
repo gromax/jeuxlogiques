@@ -61,8 +61,9 @@ elif com == "galaxy":
 elif com == "yingyang":
     from modules.jeux.yingyang import Yingyang
     chaine = sys.argv[2]
-    if chaine.startswith("http"):
-        y = Yingyang(url=chaine)
+    if chaine.startswith("html"):
+        url = chaine.split(":",1)[1].strip() if ":" in chaine else ""
+        y = Yingyang(url=url)
     else:
         y = Yingyang(tatham=chaine)
     print(y.tex())

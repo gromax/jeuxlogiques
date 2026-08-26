@@ -1,14 +1,17 @@
 from typing import Dict, Tuple, Union
-
 from ortools.sat.python import cp_model
 
-class Solver:
-    __size:int
-    __content:Dict[Tuple[int,int],bool]
+from modules.container.yingyang import Data
 
-    def __init__(self, size:int, content:Dict[Tuple[int,int], bool]):
-        self.__size = size
-        self.__content = content
+class Solver:
+    __width:int
+    __height:int
+    __clues:Dict[Tuple[int,int],bool]
+
+    def __init__(self, data:Data):
+        self.__width = data.width
+        self.__height = data.height
+        self.__clues = data.clues
 
     def __neighbors(self, i:int, j:int):
         """
@@ -17,14 +20,14 @@ class Solver:
         for di,dj in [(1,0),(-1,0),(0,1),(0,-1)]:
             ni = i+di
             nj = j+dj
-            if 0 <= ni < self.__size and 0 <= nj < self.__size:
+            if 0 <= ni < self.__height and 0 <= nj < self.__width:
                 yield ni,nj
     
     def __get_white(self) -> Tuple[int,int]:
         """
         retourne une case blanche
         """
-        for (i,j),v in self.__content.items():
+        for (i,j),v in self.__clues.items():
             if v is True:
                 return i,j
         raise ValueError("aucune case blanche")
@@ -34,14 +37,14 @@ class Solver:
         """
         retourne une case noire
         """
-        for (i,j),v in self.__content.items():
+        for (i,j),v in self.__clues.items():
             if v is False:
                 return i,j
         raise ValueError("aucune case noire")
 
 
     def solve(self) -> Union[Dict[Tuple[int,int],bool], False]:
-        N = self.__size**2
+        N = self.__height * self.__width
         model = cp_model.CpModel()
 
         # -------------------------
@@ -49,12 +52,12 @@ class Solver:
         # -------------------------
 
         whites = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 whites[i,j] = model.NewBoolVar(f"w_{i}_{j}")
-                if (i,j) not in self.__content:
+                if (i,j) not in self.__clues:
                     continue
-                model.Add(whites[i,j] == self.__content[i,j])
+                model.Add(whites[i,j] == self.__clues[i,j])
 
         #-----------------------------
         # nombre de cellules whites 
@@ -67,21 +70,21 @@ class Solver:
         # -------------------------
         # il y a toujours une case blanche qui servira de racine
         f_white = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 for ni,nj in self.__neighbors(i,j):
                     # flux pour white
-                    f_white[i,j,ni,nj] = model.NewIntVar(0, N, f"f_white_{i}_{j}_{ni}_{nj}")
+                    f_white[i,j,ni,nj] = model.NewIntVar(0, N, f"flux_white ({i},{j})->({ni},{nj})")
                     # flux seulement entre cellules blanches
                     model.Add(f_white[i,j,ni,nj] <= N * whites[i,j])
                     model.Add(f_white[i,j,ni,nj] <= N * whites[ni,nj])
     
         f_black = {}
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 for ni,nj in self.__neighbors(i,j):
                     # flux pour black
-                    f_black[i,j,ni,nj] = model.NewIntVar(0, N, f"f_black_{i}_{j}_{ni}_{nj}")
+                    f_black[i,j,ni,nj] = model.NewIntVar(0, N, f"flux_black ({i},{j})->({ni},{nj})")
                     # flux seulement entre cellules noires
                     model.Add(f_black[i,j,ni,nj] <= N * whites[i,j].Not())
                     model.Add(f_black[i,j,ni,nj] <= N * whites[ni,nj].Not())
@@ -92,8 +95,8 @@ class Solver:
 
         # flux white
         i_root, j_root = self.__get_white()
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 incoming = []
                 outgoing = []
 
@@ -113,8 +116,8 @@ class Solver:
 
         # flux black
         i_root, j_root = self.__get_black()
-        for i in range(self.__size):
-            for j in range(self.__size):
+        for i in range(self.__height):
+            for j in range(self.__width):
                 incoming = []
                 outgoing = []
 
@@ -134,10 +137,10 @@ class Solver:
 
 
         # ------------------------------------------
-        # conservation des carrés 2x2 et diagonales
+        # vérification des carrés 2x2 et diagonales
         # ------------------------------------------
-        for i in range(self.__size - 1):
-            for j in range(self.__size - 1):
+        for i in range(self.__height - 1):
+            for j in range(self.__width - 1):
                 square = [
                     whites[i, j],
                     whites[i + 1, j],
