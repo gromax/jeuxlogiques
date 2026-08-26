@@ -30,15 +30,15 @@ class Data:
         produit un id à la tatham : wxh:cBaNN...
         """
         gid = f"{self.__width}x{self.__height}:"
-        keys = sorted(self.__content.keys())
+        keys = sorted(self.__clues.keys())
         index = 0
         for i,j in keys:
-            new_index = i*self.__size+j
+            new_index = i*self.__width+j
             delta = new_index - index
             if delta > 0:
                 gid += chr(ord('a')+delta-1)
             index = new_index
-            gid += "B" if self.__content[(i,j)] is True else "N"
+            gid += "B" if self.__clues[(i,j)] is True else "N"
             index += 1
         return gid
     
