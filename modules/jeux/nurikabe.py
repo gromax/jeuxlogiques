@@ -1,5 +1,5 @@
 from typing import List, Union
-from modules.htmldecoder.nurikabe import decoder
+from modules.htmldecoder.nurikabe import decode_html
 from modules.container.nurikabe import Data
 from modules.solvers.nurikabe import Solver
 from modules.tex.misc import list_to_showList
@@ -12,7 +12,7 @@ class Nurikabe:
         assert set(options) <= {"url", "tatham"}, "options incorrectes"
         assert "url" in options or "tatham" in options, "option url ou tatham obligatoire"
         if "url" in options:
-            self.__data = decoder(options["url"])
+            self.__data = decode_html(options["url"])
         else:
             self.__data = Data.decode(options["tatham"])
         solver = Solver(self.__data)

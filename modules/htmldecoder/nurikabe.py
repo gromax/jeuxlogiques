@@ -7,7 +7,7 @@ from typing import List
 from playwright.sync_api import sync_playwright
 from modules.container.nurikabe import Data
 
-def decoder(url:str):
+def decode_html(url:str):
     """
     Décodeur pour le site https://fr.puzzle-nurikabe.com/
     """
