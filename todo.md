@@ -12,7 +12,7 @@ Il reste quelques problèmes :
 - [x] adjacent chiffre décalés (showList dans le scope, devrait pas)
 - [x] undead utilise un \defBordsHBGD et pas tower, pas homogène
 - [x] ajouter palissade
-- [ ] ajouter pearl
+- [x] ajouter pearl
 - [ ] ajouter range
 - [ ] ajouter loopy irréguliers
 - [x] mettre un container pour galaxy
