@@ -1,4 +1,4 @@
-from typing import Tuple, List, Union
+from typing import List, Union
 from modules.container.pearl import Data
 from modules.solvers.pearl import Solver
 from modules.tex.misc import list_to_showList
