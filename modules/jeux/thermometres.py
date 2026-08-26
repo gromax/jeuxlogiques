@@ -1,5 +1,5 @@
 from typing import List, Union, Dict, Tuple
-from modules.htmldecoder.thermometres import HtmlDecoder
+from modules.htmldecoder.thermometres import decode_html
 from modules.container.thermometres import Data
 from modules.solvers.thermometres import Solver
 from modules.tex.misc import sideItems, list_to_showList
@@ -12,12 +12,10 @@ class Thermometres:
     __sol:Union[List[bool], False]
 
     def __init__(self, **options):
-        assert set(options) <= {"url", "html","tatham"}, "options incorrectes"
+        assert set(options) <= {"url", "tatham"}, "options incorrectes"
         # pour l'instant seulement avec internet
         if "url" in options:
-            self.__data = HtmlDecoder(options["url"]).data
-        elif "html" in options:
-            self.__data = HtmlDecoder.decode(options["html"])
+            self.__data = decode_html(options["url"])
         elif "tatham" in options:
             self.__data = Data.decode(options["tatham"])
         else:

@@ -7,20 +7,20 @@ from typing import List
 from playwright.sync_api import sync_playwright
 from modules.container.nurikabe import Data
 
-def decode_html(url:str):
+URL = "https://fr.puzzle-nurikabe.com/"
+
+def decode_html(url_complement:str):
     """
     Décodeur pour le site https://fr.puzzle-nurikabe.com/
     """
+    url = URL if url_complement == "" else url = URL + f"?size={url_complement}"
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
         page.goto(url)
-
         # attendre que la page soit chargée
         page.wait_for_load_state("networkidle")
-
         html = page.content()
-
         browser.close()
     content_list = __decode(html)
     size = int(len(content_list)**0.5)

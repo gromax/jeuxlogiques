@@ -63,18 +63,18 @@ elif com == "yingyang":
     chaine = sys.argv[2]
     if chaine.startswith("html"):
         url = chaine.split(":",1)[1].strip() if ":" in chaine else ""
-        y = Yingyang(url=url)
+        grid = Yingyang(url=url)
     else:
-        y = Yingyang(tatham=chaine)
-    print(y.tex())
+        grid = Yingyang(tatham=chaine)
+    print(grid.tex())
 elif com == "undead":
     from modules.jeux.undead import Undead
     u = Undead(tatham=sys.argv[2])
     print(u.tex())
 elif com == "camping":
     from modules.jeux.camping import Camping
-    c = Camping(tatham=sys.argv[2])
-    print(c.tex())
+    grid = Camping(tatham=sys.argv[2])
+    print(grid.tex())
 elif com == "techtonic":
     from modules.jeux.techtonic import Techtonic
     t = Techtonic(tatham=sys.argv[2])
@@ -83,18 +83,20 @@ elif com == "nurikabe":
     from modules.jeux.nurikabe import Nurikabe
     chaine = sys.argv[2]
     if chaine.startswith("http"):
-        n = Nurikabe(url=chaine)
+        url = chaine.split(":",1)[1].strip() if ":" in chaine else ""
+        grid = Nurikabe(url=url)
     else:
-        n = Nurikabe(tatham=chaine)
-    print(n.tex())
+        grid = Nurikabe(tatham=chaine)
+    print(grid.tex())
 elif com == "thermometres":
     from modules.jeux.thermometres import Thermometres
     chaine = sys.argv[2]
     if chaine.startswith("http"):
-        j = Thermometres(url=chaine)
+        url = chaine.split(":",1)[1].strip() if ":" in chaine else ""
+        grid = Thermometres(url=url)
     else:
-        j = Thermometres(tatham=chaine)
-    print(j.tex())
+        grid = Thermometres(tatham=chaine)
+    print(grid.tex())
 elif com == "grid":
     from modules.primitives.zones import Zones
     filename = sys.argv[2]
