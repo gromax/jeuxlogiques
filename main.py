@@ -15,6 +15,7 @@ if len(sys.argv) <= 2:
     print('techtonic "<-- code -->"')
     print('thermometres "<-- url ou code -->"')
     print('towers "<-- code -->"')
+    print('tracks "<-- code -->"')
     print('undead "<-- code -->"')
     print('unequal "<-- code -->"')
     print('yingyang "<-- url ou code -->"')
@@ -86,6 +87,11 @@ elif com == "towers":
     chaine = sys.argv[2]
     t = Towers(tatham = chaine)
     print(t.tex())
+elif com == "tracks":
+    from modules.jeux.tracks import Game
+    chaine = sys.argv[2]
+    grid = Game(tatham = chaine)
+    print(grid.tex())
 elif com == "undead":
     from modules.jeux.undead import Undead
     u = Undead(tatham=sys.argv[2])
