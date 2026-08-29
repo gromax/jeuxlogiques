@@ -1,7 +1,7 @@
 from typing import Dict, Tuple, Union, List
 from ortools.sat.python import cp_model
 
-from modules.container.yingyang import Data
+from modules.container.pearl import Data
 
 DELTAS = ((-1,0),(0,1),(1,0),(0,-1)) # parcouru HDBG
 # j'appelerai address une paire d'index, toujours dans l'ordre
@@ -255,7 +255,7 @@ class Solver:
                 if ad not in walls:
                     walls[ad] = w
         
-        # le nombres de connexions pour une cellule donnée devrait être 2 ou 4,
+        # le nombres de connexions pour une cellule donnée devrait être 2 ou 0,
         # 2 dans le cas d'une cellule avec clue
         # la fonction assure également le calcul pour les cases noires et blanches
         for cell in cells.values():
