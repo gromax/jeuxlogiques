@@ -128,7 +128,39 @@ def list_command(width:int, height:int, in_L:Union[list, dict], **options) -> Li
     output.append("}{")
     output += commands
     output.append("}")
-    output.appnd("\\end{scope}")
+    output.append("\\end{scope}")
+    if cor:
+        output.append("}{ }")
+    return output
+
+def list_command_raw(width:int, height:int, in_L:list, **options) -> List[str]:
+    """
+    width: largeur de la grille
+    height: hauteur de la grille
+    in_L: liste des items à afficher
+    options:
+        symbol: fonction pour transformer un item en string
+        cor: si True, le code est conditionné par \\ifthenelse{\\showCor=1}{...}{}
+        varname: nom de la variable tex à utiliser dans les commandes. Par défaut \\item
+        commands: liste de commandes tex à exécuter pour chaque item. Par défaut [";"]
+    """
+    assert set(options) <= {"symbol", "cor", "varname", "commands"}
+    if len(in_L) == 0:
+        return []
+    symbol = options.get('symbol', lambda item:str(item))
+    cor = options.get('cor', False)
+    var_name = options.get('varname','\\item')
+    commands = options.get('commands', ["\\draw <coord> node[scale=1]{\\item};"])
+    assert type(commands) == list
+    out_L = ",".join(symbol(item) for item in in_L)
+    output = []
+    if cor:
+        output.append("\\ifthenelse{\\showCor = 1}{")
+    output.append("\\begin{scope}[shift={(.5," + str(height -.5) +")},yscale=-1]")
+    output.append("\\foreach " + var_name + " in {" + out_L +"}{")
+    output += commands
+    output.append("}")
+    output.append("\\end{scope}")
     if cor:
         output.append("}{ }")
     return output
