@@ -13,7 +13,7 @@ def decode_html(url_complement:str):
     """
     Décodeur pour le site https://fr.puzzle-nurikabe.com/
     """
-    url = URL if url_complement == "" else url = URL + f"?size={url_complement}"
+    url = URL if url_complement == "" else URL + f"?size={url_complement}"
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True)
         page = browser.new_page()
