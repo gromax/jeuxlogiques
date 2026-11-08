@@ -8,6 +8,7 @@ if len(sys.argv) <= 2:
     print('galaxy <-- code -->')
     print("kenken <-- code -->")
     print('loopy <-- code -->')
+    print('norinori "<-- url ou code -->"')
     print('nurikabe "<-- url ou code -->"')
     print('palisade <-- code -->')
     print('pearl <-- code -->')
@@ -48,6 +49,15 @@ elif com == "loopy":
     from modules.jeux.loopy import Loopy
     t = Loopy(tatham = sys.argv[2])
     print(t.tex())
+elif com == "norinori":
+    from modules.jeux.norinori import Game
+    chaine = sys.argv[2]
+    if chaine.startswith("http"):
+        url = chaine.split(":",1)[1].strip() if ":" in chaine else ""
+        grid = Game(url=url)
+    else:
+        grid = Game(tatham=chaine)
+    print(grid.tex())
 elif com == "nurikabe":
     from modules.jeux.nurikabe import Nurikabe
     chaine = sys.argv[2]
