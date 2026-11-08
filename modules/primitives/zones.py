@@ -150,8 +150,6 @@ class Zones:
             wallsStr = wallsStr[:-c+1] + str(c)
         return str(width)+"x"+str(height)+":"+wallsStr
 
-
-
     @classmethod
     def makeFromStr(cls, chaine:str) -> "Zones":
         """
@@ -211,6 +209,34 @@ class Zones:
         L = g.labels
         return g
 
+    def toTathamStr(self) -> str:
+        walls = self.__verWall + self.__horWall
+        assert len(walls) > 0
+        letters = []
+        jump = 0
+        for w in walls:
+            if not w:
+                jump +=1
+            elif jump>0:
+                letter = chr(ord('a') + jump - 1)
+                letters.append(letter)
+                jump = 0
+            else:
+                letters.append('_')
+        if jump>0:
+            letter = chr(ord('a') + jump - 1)
+            letters.append(letter)
+        # on peut compresser encore dans le cas où on a plus de 2 repétition
+        groupedLetters = [[letters[0], 1]]
+        for letter in letters[1:]:
+            if letter == groupedLetters[-1][0]:
+                groupedLetters[-1][1] += 1
+            else:
+                groupedLetters.append([letter, 1])
+        # il reste à produire la chaîne
+        chaine = "".join([letter + str(n) if n>2 else letter*n for (letter,n) in groupedLetters])
+        return f"{self.__width}x{self.__height}:{chaine}"
+
     def __coords_with_label(self, label:int) -> List[Tuple[int,int]]:
         """
         label: numéro de zone demandée
@@ -248,6 +274,26 @@ class Zones:
                 z.add_coord(iline, icol, cell)
             zones.append(z)
         return lines, cols, zones
+
+    def removeRightWall(self, iline:int, icol:int):
+        """
+        supprime le mur à droite de la cell en iline, icol
+        """
+        assert 0 <= iline < self.__height
+        assert 0 <= icol < self.__width
+        if icol == self.__width - 1:
+            return
+        self.removeVerWall(iline * (self.__width-1) + icol)
+
+    def removeBottomWall(self, iline:int, icol:int):
+            """
+            supprime le mur en bas de la cell en iline, icol
+            """
+            assert 0 <= iline < self.__height
+            assert 0 <= icol < self.__width
+            if iline == self.__height - 1:
+                return
+            self.removeHorWall(icol * (self.__height-1) + iline)
     
     def zones_ij(self) -> List[List[Tuple[int,int]]]:
         """
@@ -255,3 +301,17 @@ class Zones:
         """
         return [self.__coords_with_label(lab) for lab in set(self.__labels)]
     
+    def toLettersTags(self) -> str:
+        """
+        renvoie un grille de forme
+        AAA
+        ABC
+        BBC
+        """
+        lines = ""
+        for iline in range(self.__height):
+            tag_line = [self.__cellTag(iline, icol) for icol in range(self.__width)]
+            letter_line = [chr(ord('A')+i) for i in tag_line]
+            str_line = "".join(letter_line)
+            lines.append(str_line)
+        return "\n".join(lines)
