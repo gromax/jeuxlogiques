@@ -1,7 +1,7 @@
-from typing import Tuple, List, Union, Dict
+from typing import List, Union
 from modules.htmldecoder.norinori import decode_html
 from modules.container.norinori import Data
-#from modules.solvers.yingyang import Solver
+from modules.solvers.norinori import Solver
 from modules.tex.misc import list_to_showList
 
 class Game:
@@ -15,8 +15,8 @@ class Game:
             self.__data = decode_html(options["url"])
         else:
             self.__data = Data.decode(options["tatham"])
-        #solver = Solver(self.__data)
-        self.__sol = False #solver.solve()
+        solver = Solver(self.__data)
+        self.__sol = solver.solve()
 
     def tex(self):
         game_id = self.__data.game_id
@@ -24,10 +24,10 @@ class Game:
         w = self.__data.width
         zones = self.__data.zones
         output = [
-            f"%id = {game_id}",
+            "% norinori",
+            f"% {game_id}",
             "\\begin{tikzpicture}[scale=1]",
             "\\begin{scope}[shift={(0," + str(h) + ")}, yscale=-1]",
-            "\\draw[line width=.5pt] (0,0) grid[step=1] (" + str(w) + ", " + str(h) + ");"
         ]
 
         if self.__sol is not False:
@@ -39,6 +39,7 @@ class Game:
                 macroname = "showColorList",
                 symbol = lambda v: 'k' if v else ' '
             )
+        output.append("\\draw[line width=.5pt] (0,0) grid[step=1] (" + str(w) + ", " + str(h) + ");")
         for z in zones:
             output.append(z.cadre().tex())
         output.append("\\end{scope}")
