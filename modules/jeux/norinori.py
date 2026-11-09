@@ -25,11 +25,9 @@ class Game:
         zones = self.__data.zones
         output = [
             "% norinori",
-            f"% {game_id}",
-            "\\begin{tikzpicture}[scale=1]",
-            "\\begin{scope}[shift={(0," + str(h) + ")}, yscale=-1]",
+            f"% {game_id}"
+            "\\begin{tikzpicture}[scale=1]"
         ]
-
         if self.__sol is not False:
             output += list_to_showList(
                 w,
@@ -39,7 +37,10 @@ class Game:
                 macroname = "showColorList",
                 symbol = lambda v: 'k' if v else ' '
             )
-        output.append("\\draw[line width=.5pt] (0,0) grid[step=1] (" + str(w) + ", " + str(h) + ");")
+        ouput += [
+            "\\begin{scope}[shift={(0," + str(h) + ")}, yscale=-1]",
+            "\\draw[line width=.5pt] (0,0) grid[step=1] (" + str(w) + ", " + str(h) + ");"
+        ]
         for z in zones:
             output.append(z.cadre().tex())
         output.append("\\end{scope}")
