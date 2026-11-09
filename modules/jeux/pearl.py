@@ -17,7 +17,8 @@ class Game:
         h = self.__data.height
         clues = self.__data.clues
         output = [
-            "%id="+self.__data.game_id,
+            "% pearl",
+            f"% {self.__data.game_id}",
             "\\begin{tikzpicture}[scale=1]",
             "\\draw[line width=.5pt] (0,0) rectangle (" + str(w) + ", " + str(h) + ");",
             "\\draw[line width=.1pt] (0,0) grid[step=1] (" + str(w) + ", " + str(h) + ");"

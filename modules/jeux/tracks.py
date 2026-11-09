@@ -21,7 +21,10 @@ class Game:
         """
         w = self.__data.width
         h = self.__data.height
-        output = ["%id="+self.__data.game_id]
+        output = [
+            "% tracks",
+            f"% {self.__data.game_id}"
+        ]
         output.append("\\begin{tikzpicture}[scale=.7]")
         output.append("\\draw[line width=0.5pt] (0,0) grid[step=1] ("+str(w)+","+str(h)+");")
 

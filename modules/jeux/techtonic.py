@@ -27,7 +27,8 @@ class Techtonic:
 
     def tex(self):
         output = [
-            "%id = "+self.__game_id,
+            "% techtonic",
+            f"% {self.__game_id}",
             "\\begin{tikzpicture}[scale=1]",
             "\\begin{scope}[shift={(0," + str(self.__height) + ")}, yscale=-1]",
             "\\draw[line width=1pt] (0,0) rectangle (" + str(self.__width) + ", " + str(self.__height) + ");",

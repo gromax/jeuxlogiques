@@ -36,7 +36,10 @@ class Unequal:
         """
         Retourne le code LaTeX pour générer le jeu
         """
-        output = ["%id: "+self.__game_id]
+        output = [
+            "% unequal",
+            f"% {self.__game_id}"
+        ]
         output.append("\\begin{tikzpicture}[scale=1.5]")
         output.append("\\inequalGrid{"+str(self.__size)+"}")
         output.append("\\begin{scope}[shift={(0.5,"+str(self.__size-0.5)+")}, yscale=-1]")

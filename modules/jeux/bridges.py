@@ -25,7 +25,8 @@ class Bridges:
         w = self.__data.width
         h = self.__data.height
         output = [
-            "% "+self.__data.game_id,
+            "% bridges",
+            f"% {self.__data.game_id}",
             "\\begin{tikzpicture}[scale=1]",
             "%\\begin{scope}[shift={(0.5,0.5)}]",
             f"%\\draw[line width=0.5pt] (0,0) grid[step=1] ({w-1},{h-1});",

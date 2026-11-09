@@ -31,7 +31,8 @@ class Thermometres:
         W = self.__data.width
 
         output = [
-            f"%id={self.__data.game_id}",
+            "% thermometers",
+            f"% {self.__data.game_id}",
             "\\begin{tikzpicture}[scale=1.2]",
         ]
         output += sideItems(

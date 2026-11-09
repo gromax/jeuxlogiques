@@ -17,7 +17,8 @@ class Slant:
 
     def tex(self):
         output = [
-            "%id = "+self.__data.game_id,
+            "% slant",
+            f"% {self.__data.game_id}",
             "\\medskip",
             "\n"
             "\\begin{tikzpicture}[scale=1]",

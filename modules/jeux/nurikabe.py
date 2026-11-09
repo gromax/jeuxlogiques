@@ -22,7 +22,8 @@ class Nurikabe:
         w = self.__data.width
         h = self.__data.height
         output = [
-            "%id="+self.__game_id,
+            "% nurikabe",
+            f"% {self.__game_id}",
             "\\begin{tikzpicture}[scale=1]",
             "\\draw[line width=1pt] (0,0) rectangle (" + str(w) + ", " + str(h) + ");",
             "\\draw[line width=.5pt] (0,0) grid[step=1] (" + str(w) + ", " + str(h) + ");"

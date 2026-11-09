@@ -25,7 +25,8 @@ class Towers:
         S = self.__data.size
 
         output = [
-            "%"+self.__data.game_id,
+            "% towers",
+            f"% {self.__data.game_id}",
             "\\begin{tikzpicture}[scale=1.2]",
             "\\draw[line width=1pt] (0,0) rectangle (" + str(S) + "," + str(S) +");",
             "\\draw[line width=0.5pt] (0,0) grid[step=1] (" + str(S) + "," + str(S) + ");",

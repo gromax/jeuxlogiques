@@ -35,7 +35,10 @@ class Adjacent:
         Retourne le code LaTeX pour générer le jeu
         """
         S = self.__data.size
-        output = ["% "+self.__data.game_id]
+        output = [
+            "% adjaccent",
+            f"% {self.__data.game_id}"
+        ]
         output.append("\\begin{tikzpicture}[scale=1.5]")
         output.append("\\inequalGrid{"+str(S)+"}")
         output.append("\\begin{scope}[shift={(0.5,"+str(S-0.5)+")}, yscale=-1]")

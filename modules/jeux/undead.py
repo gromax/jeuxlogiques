@@ -17,7 +17,8 @@ class Undead:
 
     def tex(self):
         output = [
-            "%id = "+self.__data.game_id,
+            "% undead",
+            f"% {self.__data.game_id}",
             f"{{\\Large G = {self.__data.ghosts} \\quad V = {self.__data.vampires} \\quad Z = {self.__data.zombies} }}",
             "\\medskip",
             "\n"

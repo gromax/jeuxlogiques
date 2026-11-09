@@ -38,7 +38,8 @@ class Kenken:
 
     def tex(self):
         output = [
-            "%id = "+self.__game_id,
+            "% kenken",
+            f"% {self.__game_id}",
             "\\begin{tikzpicture}[scale=1]",
             "\\begin{scope}[shift={(0," + str(self.__size) + ")}, yscale=-1]",
             "\\draw[line width=.5pt] (0,0) grid[step=1] (" + str(self.__size) + ", " + str(self.__size) + ");"
